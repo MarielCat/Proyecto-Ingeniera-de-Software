@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+
 export default function MovieCard({ movie }) {
   return (
     <Link href={`/movie/${movie.id}`}>
