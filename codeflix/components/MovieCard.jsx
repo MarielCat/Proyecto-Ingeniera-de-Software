@@ -8,7 +8,7 @@ export default function MovieCard({ movie }) {
           src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
           className="rounded-lg shadow-lg shadow-[#00b8c433]"
         />
-        <h3 className="mt-2 text-sm text-center text-[#e7fafa]">{movie.title}</h3>
+        <h3 className="mt-2 text-sm text-center text-black">{movie.title}</h3>
       </div>
     </Link>
   );
