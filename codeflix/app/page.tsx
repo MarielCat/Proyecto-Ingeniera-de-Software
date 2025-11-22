@@ -15,20 +15,18 @@ export default async function Home() {
         </h1>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          {movies.map((m) => (
-            <MovieCard key={m.id} movie={m} />
-          ))}
+          {Array.isArray(movies) && movies.map((m) => ( <MovieCard key={m.id} movie={m} /> ))}
         </div>
 
         <h2 className="text-xl font-bold text-[#00a4ad] mt-10 mb-4">Géneros</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {genres.map((g) => (
-            <div
-              key={g.id}
-              className="bg-[#e6ffff] text-[#034447] border border-[#bcecef] rounded-xl px-3 py-2 text-center"
-            >
-              {g.name}
+        {Array.isArray(genres) && genres.map((g) => (
+          <div 
+            key={g.id}
+            className="bg-[#00b8c41a] border border-[#00b8c4] text-[#e7fafa] rounded-lg px-3 py-2 text-center text-sm"
+          >
+            {g.name}
             </div>
           ))}
         </div>
