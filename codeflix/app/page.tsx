@@ -7,13 +7,8 @@ export default async function Home() {
 
   return (
     <>
-   
-
-      <main className="pt-24 px-6 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#008c95] mb-6">
-          Películas de fantasía
-        </h1>
-
+      <main className="pt-[2%] px-6 max-w-6xl mx-auto">
+        
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
           {Array.isArray(movies) && movies.map((m) => ( <MovieCard key={m.id} movie={m} /> ))}
         </div>

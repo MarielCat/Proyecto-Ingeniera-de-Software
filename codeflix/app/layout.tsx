@@ -19,7 +19,31 @@ export default function RootLayout({
         <Header onMenuClick={() => setMenuOpen(true)} />
         <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-        <div className={`pt-20 transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className={`pt-[7%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className="relative w-full h-[26vw] overflow-hidden flex items-center justify-center">
+          {/*video bg */}
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src="/bg.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+          {/*overlay*/}
+          <div className="absolute inset-0 bg-[#004b4b]/70" />
+          <div className="relative text-center text-white font-bold py-16">
+            <h1 className="text-7xl font-extrabold  mb-6">
+              CodeFlix
+            </h1>
+            <p className="text-lg pb-[1%]">
+              Tu guía de fantasía
+            </p>
+            <p className="text-md font-normal pb-[1%]">
+              Busca, filtra y descubre películas que encajan con tu mundo.
+            </p>
+          </div>
+        </div>
           {children}
         </div>
       </body>
