@@ -1,3 +1,4 @@
+//codeflix/components/Header.tsx
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -30,9 +31,7 @@ export default function Header({ onMenuClick }) {
         >
           ☰
         </button>
-
         <Link href="/" className="font-bold text-xl text-[#008c95]">CineFlix</Link>
-
         <div className="flex-1 flex justify-center">
           <input
             type="text"

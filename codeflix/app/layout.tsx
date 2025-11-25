@@ -6,8 +6,6 @@ import SideMenu from "@/components/SideMenu";
 import { useState } from "react";
 import "./globals.css";
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
