@@ -57,7 +57,8 @@ export default function RootLayout({
         <Header onMenuClick={() => setMenuOpen(true)} />
         <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-        <div className={`pt-20 transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className={`pt-[3%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        
           {children}
         </div>
       </body>
