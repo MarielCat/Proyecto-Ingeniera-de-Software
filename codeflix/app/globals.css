@@ -24,3 +24,30 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ocultar scrollbar en todos los navegadores */
+.scrollbar-hide {
+  -ms-overflow-style: none;     /* IE y Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari y Opera */
+}
+
+/* Opcional: una barra fina y discreta */
+.scrollbar-thin {
+  scrollbar-width: thin;        /* Firefox */
+  scrollbar-color: #00b8c4 #00000000; /* thumb y track (transparente) */
+}
+.scrollbar-thin::-webkit-scrollbar {
+  height: 8px;                  /* para contenedores horizontales */
+  width: 8px;                   /* para verticales */
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #00b8c4;    /* color del thumb */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+}

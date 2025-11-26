@@ -1,0 +1,33 @@
+// codeflix/components/MovieCard.tsx
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+
+type TMDBMovie = { id: number; title?: string; name?: string; poster_path?: string | null };
+type MovieCardProps = { movie: TMDBMovie; className?: string };
+
+export default function MovieCard({ movie, className }: MovieCardProps) {
+  const displayTitle = movie.title ?? movie.name ?? "Título no disponible";
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+    : "/poster-default.png";
+
+  return (
+    <Link href={`/movie/${movie.id}`} aria-label={`Ver detalles de ${displayTitle}`}>
+      <div className={`pt-2 overflow-visible cursor-pointer transition-transform duration-200 hover:scale-105 ${className ?? ""}`}>
+        <div className="relative rounded-lg overflow-hidden shadow-lg shadow-[#00b8c433] border border-[#00b8c4]/30">
+          <div className="aspect-[2/3] relative overflow-visible">
+            <Image
+              src={posterUrl}
+              alt={displayTitle}
+              fill
+              sizes="(max-width: 640px) 160px, (max-width: 768px) 180px, (max-width: 1024px) 200px, 220px"
+              className="object-cover"
+            />
+          </div>
+        </div>
+        <h3 className="mt-2 text-sm text-center text-black line-clamp-2">{displayTitle}</h3>
+      </div>
+    </Link>
+  );
+}
