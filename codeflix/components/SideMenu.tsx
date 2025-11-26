@@ -17,7 +17,6 @@ export default function SideMenu({ open, onClose }) {
 
   return (
     <>
-      {/* Overlay semitransparente: clic para cerrar */}
       <div
         className={`fixed inset-0 bg-black/30 backdrop-blur-[1px] z-30 transition-opacity duration-300 
         ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
@@ -25,14 +24,12 @@ export default function SideMenu({ open, onClose }) {
         aria-hidden="true"
       />
 
-      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full w-72 bg-white border-r border-[#d6f4f6] shadow-xl p-5 z-40 transform transition-transform duration-300 
         ${open ? "translate-x-0" : "-translate-x-full"}`}
         role="dialog"
         aria-modal="true"
       >
-        {/* Botón de cerrar minimalista (SVG) */}
         <button
           onClick={onClose}
           aria-label="Cerrar"
