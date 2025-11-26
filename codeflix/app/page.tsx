@@ -1,31 +1,55 @@
-import MovieCard from "@/components/MovieCard";
-import { getFantasyMovies, getGenres } from "@/lib/tmdb";
+import Carousel from "@/components/Carousel";
+import {
+  getFantasyPopular,
+  getFantasyTopRated,
+  getFantasyLatest,
+  getFantasyUpcoming,
+  getFantasyTrending,
+  getRecommendedFantasyByMovieId,
+  getGenres,
+} from "@/lib/tmdb";
 
 export default async function Home() {
-  const movies = await getFantasyMovies(); 
-  const genres = await getGenres();
+  const [
+    populares,
+    topRated,
+    recientes,
+    proximos,
+    trendingFallback,
+    genres,
+    recomendadasSeed,
+  ] = await Promise.all([
+    getFantasyPopular(),
+    getFantasyTopRated(200),
+    getFantasyLatest(),
+    getFantasyUpcoming(),
+    getFantasyTrending(),
+    getGenres(),
+    getRecommendedFantasyByMovieId(120),
+  ]);
+
+  const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
   return (
-    <>
-      <main className="pt-[2%] px-6 max-w-6xl mx-auto">
-        
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-          {Array.isArray(movies) && movies.map((m) => ( <MovieCard key={m.id} movie={m} /> ))}
-        </div>
+    <main className="px-6 max-w-7xl mx-auto">
+      <Carousel title="Más populares" items={populares} speed={1.6} />
+      <Carousel title="Más recientes" items={recientes} speed={1.8} />
+      <Carousel title="Mejor calificadas" items={topRated} speed={1.4} />
+      <Carousel title="Próximos estrenos" items={proximos} speed={1.7} />
+      <Carousel title="Recomendadas" items={recomendadas} speed={1.5} />
 
-        <h2 className="text-xl font-bold text-[#00a4ad] mt-10 mb-4">Géneros</h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        {Array.isArray(genres) && genres.map((g) => (
-          <div 
-            key={g.id}
-            className="bg-[#00b8c41a] border border-[#00b8c4] text-[#e7fafa] rounded-lg px-3 py-2 text-center text-sm"
-          >
-            {g.name}
+      <h2 className="text-xl font-bold text-[#00a4ad] mt-10 mb-4">Géneros</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        {Array.isArray(genres) &&
+          genres.map((g) => (
+            <div
+              key={g.id}
+              className="bg-[#00b8c41a] border border-[#00b8c4] text-[#e7fafa] rounded-lg px-3 py-2 text-center text-sm"
+            >
+              {g.name}
             </div>
           ))}
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

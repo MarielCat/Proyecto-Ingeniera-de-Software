@@ -16,11 +16,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="bg-[#f6ffff]">
-        <Header onMenuClick={() => setMenuOpen(true)} />
-        <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
-
-        <div className={`pt-[7%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
-        <div className="relative w-full h-[26vw] overflow-hidden flex items-center justify-center">
+      <div className="relative w-full h-[30vw] overflow-hidden flex items-center justify-center">
           {/*video bg */}
           <video
             className="absolute inset-0 w-full h-full object-cover"
@@ -32,7 +28,7 @@ export default function RootLayout({
           />
           {/*overlay*/}
           <div className="absolute inset-0 bg-[#004b4b]/70" />
-          <div className="relative text-center text-white font-bold py-16">
+          <div className="relative text-center pt-[14%] text-white font-bold py-16">
             <h1 className="text-7xl font-extrabold  mb-6">
               CodeFlix
             </h1>
@@ -44,6 +40,11 @@ export default function RootLayout({
             </p>
           </div>
         </div>
+        <Header onMenuClick={() => setMenuOpen(true)} />
+        <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+
+        <div className={`pt-[3%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        
           {children}
         </div>
       </body>
