@@ -17,9 +17,7 @@ export default async function SearchPage({ searchParams }) {
   }
 
   //Llamada a TMDB
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=es-MX&query=${encodeURIComponent(
-    query
-  )}`;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=es-MX&with_genres=14&query=${encodeURIComponent(query)}`;
 
   const res = await fetch(url, { next: { revalidate: 60 } });
   const data = await res.json();
