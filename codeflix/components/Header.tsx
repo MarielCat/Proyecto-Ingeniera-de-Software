@@ -1,11 +1,15 @@
 //codeflix/components/Header.tsx
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Header({ onMenuClick }) {
   const [visible, setVisible] = useState(true);
   const [lastY, setLastY] = useState(0);
+  const [search, setSearch] = useState("");
+
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +21,14 @@ export default function Header({ onMenuClick }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastY]);
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      if (search.trim() !== "") {
+        router.push(`/search?query=${encodeURIComponent(search)}`);
+      }
+    }
+  };
 
   return (
     <header
@@ -39,6 +51,9 @@ export default function Header({ onMenuClick }) {
           <input
             type="text"
             placeholder="Buscar..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearch}
             className="w-[30vw] rounded-xl border border-[#bdebed] px-4 py-2 bg-white focus:outline-[#00b8c4]"
           />
         </div>
