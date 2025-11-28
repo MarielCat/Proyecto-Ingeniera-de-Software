@@ -1,5 +1,5 @@
+// codeflix/components/Carousel.tsx
 "use client";
-
 import React from "react";
 import MovieCard from "@/components/MovieCard";
 
@@ -8,6 +8,7 @@ type CarouselProps = {
   items: any[]; // TMDBMovie[]
   speed?: number;
   interval?: number;
+  onItemClick?: (item: any) => void; // nueva prop opcional
 };
 
 export default function Carousel({
@@ -15,6 +16,7 @@ export default function Carousel({
   items,
   speed = 1.2,
   interval = 16,
+  onItemClick,
 }: CarouselProps) {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const [isHover, setIsHover] = React.useState(false);
@@ -44,6 +46,11 @@ export default function Carousel({
     return () => { if (rafId) cancelAnimationFrame(rafId); };
   }, [isHover, loopItems, speed, interval]);
 
+  const handleCardClick = (item: any) => {
+    // dispara la señal hacia el padre si existe
+    onItemClick?.(item);
+  };
+
   return (
     <section className="mt-8">
       <h2 className="text-xl font-bold text-[#00a4ad] mb-4">{title}</h2>
@@ -56,8 +63,21 @@ export default function Carousel({
         <div className="inline-flex gap-6 pr-6">
           {loopItems.length ? (
             loopItems.map((item, idx) => (
-              <div key={`${item.id}-${idx}`} className="w-36 sm:w-40 md:w-44 flex-shrink-0 inline-block align-top">
-                <MovieCard movie={item} />
+              <div
+                key={`${item.id}-${idx}`}
+                className="w-36 sm:w-40 md:w-44 flex-shrink-0 inline-block align-top"
+              >
+                {/* Si MovieCard ya maneja la navegación interna,
+                    puedes envolverlo en un botón; de lo contrario,
+                    pasa un onClick al contenedor */}
+                <button
+                  type="button"
+                  onClick={() => handleCardClick(item)}
+                  className="w-full text-left focus:outline-none"
+                  aria-label={`Ver ${item.title || item.name}`}
+                >
+                  <MovieCard movie={item} />
+                </button>
               </div>
             ))
           ) : (

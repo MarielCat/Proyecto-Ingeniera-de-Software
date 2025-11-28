@@ -1,8 +1,9 @@
-//codeflix/components/Header.tsx
+// codeflix/components/Header.tsx
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { addSearch } from "@/lib/reco";
 
 export default function Header({ onMenuClick }) {
   const [visible, setVisible] = useState(true);
@@ -24,8 +25,11 @@ export default function Header({ onMenuClick }) {
 
   const handleSearch = (e) => {
     if (e.key === "Enter") {
-      if (search.trim() !== "") {
-        router.push(`/search?query=${encodeURIComponent(search)}`);
+      const q = search.trim();
+      if (q !== "") {
+        // Guardar la señal de búsqueda
+        addSearch({ query: q, ts: Date.now() });
+        router.push(`/search?query=${encodeURIComponent(q)}`);
       }
     }
   };

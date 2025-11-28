@@ -1,4 +1,8 @@
+// codeflix/app/page.tsx (Home)
 import Carousel from "@/components/Carousel";
+import { addClick } from "@/lib/reco";
+import PersonalizedReco from "@/components/PersonalizedReco";
+
 import {
   getFantasyPopular,
   getFantasyTopRated,
@@ -30,8 +34,17 @@ export default async function Home() {
 
   const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
+  const handleItemClick = (item) => {
+    addClick({
+      movieId: item.id,
+      genreIds: item.genre_ids,
+      ts: Date.now(),
+    });
+  };
+
   return (
     <main className="px-6 max-w-7xl mx-auto">
+      <PersonalizedReco />
       <Carousel title="Más populares" items={populares} speed={1.6} />
       <Carousel title="Más recientes" items={recientes} speed={1.8} />
       <Carousel title="Mejor calificadas" items={topRated} speed={1.4} />
