@@ -9,6 +9,10 @@ import {
   getGenres,
 } from "@/lib/tmdb";
 
+/**
+ * Página principal de la aplicación.
+ * * @returns {JSX.Element} La estructura principal de la Home con múltiples carruseles.
+ */
 export default async function Home() {
   const [
     populares,
@@ -28,15 +32,16 @@ export default async function Home() {
     getRecommendedFantasyByMovieId(120),
   ]);
 
+  // Si no hay recomendaciones específicas para usuario, usamos tendencias generales
   const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
   return (
     <main className="px-6 max-w-7xl mx-auto">
-      <Carousel title="Más populares" items={populares} speed={1.6} />
-      <Carousel title="Más recientes" items={recientes} speed={1.8} />
-      <Carousel title="Mejor calificadas" items={topRated} speed={1.4} />
-      <Carousel title="Próximos estrenos" items={proximos} speed={1.7} />
-      <Carousel title="Recomendadas" items={recomendadas} speed={1.5} />
+      <Carousel title="Más populares" items={populares} />
+      <Carousel title="Más recientes" items={recientes} />
+      <Carousel title="Mejor calificadas" items={topRated} />
+      <Carousel title="Próximos estrenos" items={proximos} />
+      <Carousel title="Recomendadas" items={recomendadas} />
 
       <h2 className="text-xl font-bold text-[#00a4ad] mt-10 mb-4">Géneros</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
