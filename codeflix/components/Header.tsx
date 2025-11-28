@@ -58,9 +58,11 @@ export default function Header({ onMenuClick }) {
           />
         </div>
 
-        <button className="bg-[#00b8c4] w-[220px] text-white px-4 py-2 rounded-xl hover:bg-[#009ca7]">
-          Sign In
-        </button>
+        <Link href="/login">
+          <button className="bg-[#00b8c4] w-[220px] text-white px-4 py-2 rounded-xl hover:bg-[#009ca7]">
+            Sign In
+          </button>
+        </Link>
       </div>
     </header>
   );
