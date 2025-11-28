@@ -1,13 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import { FiX } from "react-icons/fi";
 
-export default function SideMenu({ open, onClose }) {
+/**
+ * Propiedades para SideMenu
+ * - `open`: boolean que determina si una opción está activada
+ */
+interface SideMenuProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function SideMenu({ open, onClose }: SideMenuProps) {
+  // Listas con filtrados
   const [categories, setCategories] = useState<string[]>([]);
   const [years, setYears] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
 
-  function toggle(setState, list, item) {
+  /**
+   * Activa/desactiva una opción de la lista.
+   *
+   * @param setState - Set de estados para la lista
+   * @param list - lista de opciones
+   * @param item - opción a elegir 
+   */
+  function toggle(setState : Dispatch<SetStateAction<string[]>>, list : string[], item: string) {
     if (list.includes(item)) {
       setState(list.filter((x) => x !== item));
     } else {

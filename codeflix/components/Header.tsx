@@ -1,12 +1,28 @@
 //codeflix/components/Header.tsx
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Header({ onMenuClick }) {
+/**
+ * Propiedades para `Header`.
+ * @property onMenuClick - llamada invocada cuando se aprieta el botón del menú lateral
+ */
+interface HeaderProps {
+  onMenuClick: () => void;
+}
+
+/**
+ * Header de aplicación superior.
+ * - Se oculta cuando usuario hace scroll hacia abajo. Si se vuelve a hacer scroll hacia arriba se vuelve a mostrar.
+ * - Contiene un botón de menú para filtros de películas, logo de CODEFLIX, barra de búsqueda input y botón de inicio de sesión.
+ */
+export default function Header({ onMenuClick }: HeaderProps) {
+  //Si header es visible 
   const [visible, setVisible] = useState(true);
+  // Última posición de scroll vertical (para detectar dirección del scroll)
   const [lastY, setLastY] = useState(0);
+  // Valor de entrada para búsqueda
   const [search, setSearch] = useState("");
 
   const router = useRouter();
@@ -22,7 +38,11 @@ export default function Header({ onMenuClick }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastY]);
 
-  const handleSearch = (e) => {
+  /**
+   * Maneja eventos del teclado en la entrada de búsqueda.
+   * Si al presionar Enter la barra no está vacía, navega a los resultados.
+   */
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (search.trim() !== "") {
         router.push(`/search?query=${encodeURIComponent(search)}`);
@@ -52,7 +72,7 @@ export default function Header({ onMenuClick }) {
             type="text"
             placeholder="Buscar..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             onKeyDown={handleSearch}
             className="w-[30vw] rounded-xl border border-[#bdebed] px-4 py-2 bg-white focus:outline-[#00b8c4]"
           />
