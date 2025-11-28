@@ -2,6 +2,10 @@ import { getMovieDetails, getMovieImages, getMovieCredits } from "@/lib/tmdb";
 import MovieGallery from "@/components/MovieGallery";
 import CastCrew from "@/components/CastCrew";
 
+/**
+ * Configuración de fuentes de Google 
+ * Elegimos Cinzel' para títulos con estética de fantasía y 'Lora' para textos largos.
+ */
 import { Cinzel } from 'next/font/google';
 const cinzel = Cinzel({ 
     subsets: ['latin'], 
@@ -16,8 +20,16 @@ const lora = Lora({
   display: 'swap',
 });
 
+
+/**
+ * Página una Película con sus detalles
+ * - Realiza 3 peticiones: Detalles, Imágenes, Cast&Crew.
+ * - Renderiza una imagen de la película como fondo.
+ */
 export default async function MoviePage({ params }) {
   const { id } = await params; 
+  
+  // Info necesaria
   const [movie, images, credits] = await Promise.all([
     getMovieDetails(id),
     getMovieImages(id),
@@ -26,6 +38,8 @@ export default async function MoviePage({ params }) {
 
   // Usaremos la primera imagen como fondo y las demás estarán en la galería
   const backgroundImage = images && images.length > 0 ? images[0].file_path : null;
+  
+  // Separamos el resto de imágenes para no repetir la del fondo en la galería
   const remainingImages = images && images.length > 1 ? images.slice(1) : images;
 
   const backgroundStyle = backgroundImage 
@@ -66,7 +80,7 @@ export default async function MoviePage({ params }) {
           Galería
         </h2>
 
-        {/* Contenedor con scroll horitzontal */}
+        {/* Contenedor con scroll horizontal */}
         <MovieGallery images={remainingImages} title={movie.title} />
       </div>
     </div>
