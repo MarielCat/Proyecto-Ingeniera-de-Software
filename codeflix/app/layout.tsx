@@ -54,13 +54,13 @@ export default function RootLayout({
 
           {/* Texto central */}
           <div className="relative text-center pt-[14%] text-white font-bold py-16">
-            <h1 className="text-7xl font-extrabold  mb-6">
+            <h1 className={`${cinzel.className} text-7xl font-extrabold  mb-6`}>
               CodeFlix
             </h1>
-            <p className="text-lg pb-[1%]">
+            <p className={`${cinzel.className} text-lg pb-[1%]`}>
               Tu guía de fantasía
             </p>
-            <p className="text-md font-normal pb-[1%]">
+            <p className={`${lora.className} text-md pb-[1%] font-normal italic`}>
               Busca, filtra y descubre películas que encajan con tu mundo.
             </p>
           </div>
