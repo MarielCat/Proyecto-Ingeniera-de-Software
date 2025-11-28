@@ -2,11 +2,26 @@
 import MovieCard from "@/components/MovieCard";
 import Link from "next/link";
 
-export default async function SearchPage({ searchParams }) {
+/**
+ * Propiedadess para la página de búsqueda.
+ */
+type SearchPageProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+/**
+ * Página de Resultados de Búsqueda .
+ * - Recibe un término de búsqueda.
+ * - Consulta la API de TMDB filtrando específicamente por películas de FANTASÍA.
+ * - Renderiza los resultados o un mensaje si no hay.
+ */
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  // Parámetros de búsqueda 
   const params = await searchParams;
-  const query = params.query ?? "";
+  const query = typeof params.query === 'string' ? params.query : "";
   const apiKey = process.env.TMDB_KEY;
 
+  // Si no hay texto, indicamos ingresarlo
   if (!query.trim()) {
     return (
       <div className="p-10 text-center">
@@ -16,9 +31,10 @@ export default async function SearchPage({ searchParams }) {
     );
   }
 
-  //Llamada a TMDB
+  // 'with_genres=14' filtra a sólo resultados de categoría Fantasía
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=es-MX&with_genres=14&query=${encodeURIComponent(query)}`;
 
+  // Mantiene los resultados en caché por 60 segundos para optimizar rendimiento
   const res = await fetch(url, { next: { revalidate: 60 } });
   const data = await res.json();
 
@@ -30,16 +46,17 @@ export default async function SearchPage({ searchParams }) {
         Resultados para: <span className="text-[#007f88]">«{query}»</span>
       </h1>
 
+      {/* Búsqueda sin coincidencias */}
       {results.length === 0 && (
-        <p className="text-lg text-gray-500">Sin resultados</p>
+        <p className="text-lg text-gray-500">Sin resultados en la categoría de fantasía.</p>
       )}
 
+      {/* Muestra la lista de tarjetas de películas resultantes*/}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {results.map((movie) => (
+        {results.map((movie: any) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
     </div>
   );
 }
-
