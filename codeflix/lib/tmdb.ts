@@ -125,3 +125,23 @@ export async function getMovieDetails(id: number) {
   const res = await fetch(`${base}/movie/${id}?api_key=${API_KEY}&language=es-MX`);
   return res.json();
 }
+
+// Imágenes
+export async function getMovieImages(id: number) {
+  const res = await fetch(`${base}/movie/${id}/images?api_key=${API_KEY}`);
+  const data = await res.json();
+
+  //Devolvemos backdrops de película
+  return data.backdrops || [];
+}
+
+// Reparto y Director
+export async function getMovieCredits(id: number) {
+  const res = await fetch(`${base}/movie/${id}/credits?api_key=${API_KEY}&language=es-MX`);
+  const data = await res.json();
+
+  return {
+    cast: (data.cast || []).slice(0, 10), // Primeros 10 actores
+    director: (data.crew || []).find((person: any) => person.job === 'Director') || null,
+  };
+}
