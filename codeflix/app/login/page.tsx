@@ -34,7 +34,10 @@ export default function LoginPage() {
       setMode("login");
       setPassword("");
     } else {
-      router.push("/");
+      // Disparar evento para actualizar el Header
+      window.dispatchEvent(new Event("loginSuccess"));
+      // Redirigir a /movie (tu dashboard de películas)
+      router.push("/movie");
     }
   };
 
