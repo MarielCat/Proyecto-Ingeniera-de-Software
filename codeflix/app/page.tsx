@@ -36,7 +36,7 @@ export default async function Home() {
   const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
   return (
-    <main className="px-6 max-w-7xl mx-auto">
+    <main className="px-6 max-w-7xl mx-auto ">
       <Carousel title="Más populares" items={populares} />
       <Carousel title="Más recientes" items={recientes} />
       <Carousel title="Mejor calificadas" items={topRated} />

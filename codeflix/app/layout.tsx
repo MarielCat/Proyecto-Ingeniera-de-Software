@@ -71,7 +71,7 @@ export default function RootLayout({
         <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
         {/* Contenido principal*/}
-        <div className={`pt-[3%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className={`bg-[#f6ffff] pt-[3%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
         
           {children}
         </div>
