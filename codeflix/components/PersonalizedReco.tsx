@@ -4,6 +4,15 @@ import React from "react";
 import Carousel from "@/components/Carousel";
 import { getClicks, getSearches } from "@/lib/reco";
 
+// Configuración de fuentes de Google 
+import { Lora } from 'next/font/google';
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
 // Si por ahora no tienes tmdb-client ni endpoint,
 // usa un fetch a tu propio API (recomendado) o comenta y muestra mock.
 async function fetchRecoFromServer(clickIds: number[], queries: string[]) {
@@ -70,20 +79,20 @@ export default function PersonalizedReco() {
   }, []);
 
   return (
-    <section className="mt-8">
-      <h2 className="text-xl font-bold text-[#00a4ad] mb-4">Podría gustarte…</h2>
+    <section className="mt-4">
+      <h2 className={`${lora.className} text-2xl font-bold text-[#3bccd4] mb-4`}>Podría gustarte…</h2>
 
       {loading && (
-        <p className="text-sm text-[#b2ecef]">Cargando recomendaciones…</p>
+        <p className={`${lora.className} text-sm text-[#b2ecef]`}>Cargando recomendaciones…</p>
       )}
 
       {error && (
-        <p className="text-sm text-red-400">Error: {error}</p>
+        <p className={`${lora.className} text-sm text-red-400`}>Error: {error}</p>
       )}
 
       {/* Muestra el conteo para confirmar visualmente */}
       {!loading && !error && (
-        <p className="text-xs text-[#b2ecef]/70 mb-2">
+        <p className="text-xs text-[#b2ecef] mb-2">
           {items.length ? `Encontradas ${items.length} recomendaciones.` : "Sin recomendaciones por ahora."}
         </p>
       )}

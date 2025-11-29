@@ -86,7 +86,7 @@ return (
         <Carousel title="Próximos estrenos" items={proximos} />
         <Carousel title="Recomendadas" items={recomendadas} />
 
-        <h2 className={`${lora.className} text-2xl font-bold text-[#00a4ad] mb-4`}>Géneros</h2>
+        {/*<h2 className={`${lora.className} text-2xl font-bold text-[#00a4ad] mb-4`}>Géneros</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 pb-10">
           {Array.isArray(genres) &&
             genres.map((g) => (
@@ -98,6 +98,7 @@ return (
               </div>
             ))}
         </div>
+        */}
       </main>
     </>
   );
