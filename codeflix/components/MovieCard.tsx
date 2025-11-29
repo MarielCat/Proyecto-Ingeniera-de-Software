@@ -14,6 +14,13 @@ const cinzel = Cinzel({
 type TMDBMovie = { id: number; title?: string; name?: string; poster_path?: string | null };
 type MovieCardProps = { movie: TMDBMovie; className?: string };
 
+/**
+   * MovieCard
+   * - Carta con imagen que representa a una película
+   *
+   * @param movie 
+   * @param className 
+   */
 export default function MovieCard({ movie, className }: MovieCardProps) {
   const displayTitle = movie.title ?? movie.name ?? "Título no disponible";
   const posterUrl = movie.poster_path
