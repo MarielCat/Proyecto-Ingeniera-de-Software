@@ -118,7 +118,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <Link href="/" className="flex items-center gap-2">
             <img
-              src="/2.png"
+              src="/codeflix.png"
               alt="logo"
               className="h-8 w-auto drop-shadow-md"
             />
