@@ -198,7 +198,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </div>
       </div>
 
-      {/* Focus states globales para inputs (opcional, pero consistente con tu diseño) */}
       <style>{`
         header input:focus {
           outline: 2px solid #00b8c4;
