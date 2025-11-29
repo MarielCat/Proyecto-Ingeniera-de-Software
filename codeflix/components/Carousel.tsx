@@ -162,7 +162,7 @@ export default function Carousel({
   };
 
   return (
-    <section className="mt-8">
+    <section className="mt-4">
       <h2 className={`${lora.className} text-2xl font-bold text-[#3bccd4] mb-4`}>{title}</h2>
       <div
         ref={ref}
