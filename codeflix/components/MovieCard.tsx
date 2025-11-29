@@ -3,6 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 
+// Configuración de fuentes de Google 
+// Configuración de fuentes de Google 
+import { Cinzel } from 'next/font/google';
+const cinzel = Cinzel({ 
+    subsets: ['latin'], 
+    weight: ['700'] 
+});
+
 type TMDBMovie = { id: number; title?: string; name?: string; poster_path?: string | null };
 type MovieCardProps = { movie: TMDBMovie; className?: string };
 
@@ -26,7 +34,7 @@ export default function MovieCard({ movie, className }: MovieCardProps) {
             />
           </div>
         </div>
-        <h3 className="mt-2 text-sm text-center text-black line-clamp-2">{displayTitle}</h3>
+        <h3 className={`${cinzel.className} mt-2 text-sm text-center font-bold text-[#00ffff] line-clamp-2`}>{displayTitle}</h3>
       </div>
     </Link>
   );

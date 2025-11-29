@@ -3,6 +3,15 @@
 import React from "react";
 import MovieCard from "@/components/MovieCard";
 
+// Configuración de fuentes de Google 
+import { Lora } from 'next/font/google';
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
 /**
  * Propiedades para Carousel.
  * @property {string} title - Título de la sección correspondiente al carrusel.
@@ -47,6 +56,7 @@ export default function Carousel({
   const animationFrameRef = React.useRef<number | null>(null);
   const autoScrollRafRef = React.useRef<number | null>(null);
 
+  // Duplicamos items para el efecto infinito
   const loopItems = React.useMemo(() => {
     const base = Array.isArray(items) ? items : [];
     return base.length ? [...base, ...base] : [];
@@ -146,7 +156,7 @@ export default function Carousel({
 
   return (
     <section className="mt-8">
-      <h2 className="text-xl font-bold text-[#00a4ad] mb-4">{title}</h2>
+      <h2 className={`${lora.className} text-2xl font-bold text-[#3bccd4] mb-4`}>{title}</h2>
       <div
         ref={ref}
         className="relative overflow-x-auto whitespace-nowrap scrollbar-hide h-[25vw] cursor-grab active:cursor-grabbing"

@@ -64,7 +64,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </button>
         <div className="h-fit px-5 py-0">
           <Link href="/" className="">
-            <img src="/2.png" alt="logo" className="w-[20%]"/>
+            <img src="/codeflix.png" alt="logo" className="w-[20%]"/>
           </Link>
         </div>
         <div className="left-0 flex justify-center items-center">
