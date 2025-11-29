@@ -1,8 +1,9 @@
-//codeflix/components/Header.tsx
+// codeflix/components/Header.tsx
 "use client";
 import { useState, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { addSearch } from "@/lib/reco";
 
 /**
  * Propiedades para `Header`.
@@ -44,8 +45,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
    */
   const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (search.trim() !== "") {
-        router.push(`/search?query=${encodeURIComponent(search)}`);
+      const q = search.trim();
+      if (q !== "") {
+        // Guardar la señal de búsqueda
+        addSearch({ query: q, ts: Date.now() });
+        router.push(`/search?query=${encodeURIComponent(q)}`);
       }
     }
   };

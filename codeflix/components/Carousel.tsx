@@ -1,5 +1,5 @@
+// codeflix/components/Carousel.tsx
 "use client";
-
 import React from "react";
 import MovieCard from "@/components/MovieCard";
 
@@ -15,6 +15,7 @@ type CarouselProps = {
   items: any[]; // TMDBMovie[]
   speed?: number;
   interval?: number;
+  onItemClick?: (item: any) => void; 
 };
 
 /**
@@ -27,8 +28,9 @@ type CarouselProps = {
 export default function Carousel({
   title,
   items,
-  speed = 0.8, // Ahora puedes poner valores bajos (ej: 0.5) y funcionará
+  speed = 0.8, 
   interval = 16,
+  onItemClick,
 }: CarouselProps) {
 
   // Ref para detectar si el usuario está interactuando (detendrá la animación)
@@ -57,7 +59,7 @@ export default function Carousel({
     if (ref.current) preciseScrollRef.current = ref.current.scrollLeft;
   }, []);
 
-  // Animación de scroll automático (bucle infinito)
+  // Animación de scroll automático 
   React.useEffect(() => {
     const el = ref.current;
     if (!el || !loopItems.length) return;
@@ -79,7 +81,7 @@ export default function Carousel({
         preciseScrollRef.current += speed * (dt / (interval || 16));
         el.scrollLeft = preciseScrollRef.current;
         
-        // Lógica de bucle infinito
+        // Lógica de ciclo infinito
         const maxScroll = el.scrollWidth / 2;
         if (el.scrollLeft >= maxScroll) {
             // Ajuste suave para evitar saltos visuales 
@@ -144,6 +146,11 @@ export default function Carousel({
     };
   }, [loopItems]);
 
+  const handleCardClick = (item: any) => {
+    // dispara la señal hacia el padre si existe
+    onItemClick?.(item);
+  };
+
   return (
     <section className="mt-8">
       <h2 className="text-xl font-bold text-[#00a4ad] mb-4">{title}</h2>
@@ -160,8 +167,21 @@ export default function Carousel({
         <div className="inline-flex gap-6 pr-6">
           {loopItems.length ? (
             loopItems.map((item, idx) => (
-              <div key={`${item.id}-${idx}`} className="w-36 sm:w-40 md:w-44 flex-shrink-0 inline-block align-top">
-                <MovieCard movie={item} />
+              <div
+                key={`${item.id}-${idx}`}
+                className="w-36 sm:w-40 md:w-44 flex-shrink-0 inline-block align-top"
+              >
+                {/* Si MovieCard ya maneja la navegación interna,
+                    puedes envolverlo en un botón; de lo contrario,
+                    pasa un onClick al contenedor */}
+                <button
+                  type="button"
+                  onClick={() => handleCardClick(item)}
+                  className="w-full text-left focus:outline-none"
+                  aria-label={`Ver ${item.title || item.name}`}
+                >
+                  <MovieCard movie={item} />
+                </button>
               </div>
             ))
           ) : (
