@@ -1,65 +1,13 @@
 'use client';
-import { useRef, useEffect } from 'react';
-
-interface CastMember {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string | null;
-}
-
-interface Director {
-  id: number;
-  name: string;
-  profile_path: string | null;
-}
+import HorizontalList from '@/components/HorizontalList';
+import type { CastMember, CrewMember } from "@/types/codeflix";
 
 interface Props {
   cast: CastMember[];
-  director: Director | null;
+  director: CrewMember | null;
 }
 
 export default function CastCrew({ cast, director }: Props) {
-  const scrollContainer = useRef<HTMLDivElement | null>(null);
-  const velocityRef = useRef(0);
-  const animationFrameRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const containerEl = scrollContainer.current;
-    if (!containerEl) return;
-
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-
-      e.preventDefault();
-      velocityRef.current = e.deltaY * 0.1;
-
-      if (animationFrameRef.current === null) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-      }
-    };
-
-    const animate = () => {
-      if (Math.abs(velocityRef.current) > 0.1) {
-        containerEl.scrollLeft += velocityRef.current;
-        velocityRef.current *= 0.95;
-        animationFrameRef.current = requestAnimationFrame(animate);
-      } else {
-        velocityRef.current = 0;
-        animationFrameRef.current = null;
-      }
-    };
-
-    containerEl.addEventListener('wheel', onWheel, { passive: false });
-
-    return () => {
-      containerEl.removeEventListener('wheel', onWheel);
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, []);
-
   // Construir lista empezando por el director y luego los actores
   const cast_crew = [
     ...(director ? [{ ...director, role: 'Director', isDirector: true }] : []),
@@ -69,10 +17,7 @@ export default function CastCrew({ cast, director }: Props) {
   if (cast_crew.length === 0) return <p>No hay información de reparto disponible.</p>;
 
   return (
-    <div
-      ref={scrollContainer}
-      className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide cursor-grab active:cursor-grabbing"
-    >
+    <HorizontalList className="gap-6">
       {cast_crew.map((person, index) => (
         <div key={`${person.id}-${index}`} className="flex-shrink-0 w-32 text-center">
           <div className="relative rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform border border-[#00b8c455] bg-[#0a2a2f] aspect-[2/3]">
@@ -94,6 +39,6 @@ export default function CastCrew({ cast, director }: Props) {
           </p>
         </div>
       ))}
-    </div>
+    </HorizontalList>
   );
 }

@@ -2,6 +2,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import type { Movie } from "@/types/codeflix";
 
 // Configuración de fuentes de Google 
 // Configuración de fuentes de Google 
@@ -11,13 +12,14 @@ const cinzel = Cinzel({
     weight: ['700'] 
 });
 
-type TMDBMovie = { id: number; title?: string; name?: string; poster_path?: string | null };
-type MovieCardProps = { movie: TMDBMovie; className?: string };
+interface MovieCardProps {
+  movie: Movie;
+  className?: string;
+}
 
 /**
    * MovieCard
    * - Carta con imagen que representa a una película
-   *
    * @param movie 
    * @param className 
    */

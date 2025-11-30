@@ -1,8 +1,9 @@
 // codeflix/components/PersonalizedReco.tsx
 "use client";
-import React from "react";
+import { useState, useEffect } from "react";
 import Carousel from "@/components/Carousel";
 import { getClicks, getSearches } from "@/lib/reco";
+import type { Movie } from "@/types/codeflix";
 
 // Configuración de fuentes de Google 
 import { Lora } from 'next/font/google';
@@ -13,11 +14,9 @@ const lora = Lora({
   display: 'swap',
 });
 
-// Si por ahora no tienes tmdb-client ni endpoint,
-// usa un fetch a tu propio API (recomendado) o comenta y muestra mock.
+// Si por ahora no existe tmdb-client ni endpoint,
+// usa un fetch o muestra mock.
 async function fetchRecoFromServer(clickIds: number[], queries: string[]) {
-  // Recomendado: crea /app/api/reco/route.ts que use TMDB (server) y devuelva mezclado.
-  // Aquí ejemplo de llamada. Ajusta la ruta según tu estructura.
   const res = await fetch("/api/reco", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -32,11 +31,11 @@ async function fetchRecoFromServer(clickIds: number[], queries: string[]) {
 }
 
 export default function PersonalizedReco() {
-  const [items, setItems] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+  const [items, setItems] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     async function build() {

@@ -1,10 +1,12 @@
 // codeflix/components/Header.tsx
 "use client";
-import { useState, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
+import { useState, type KeyboardEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { addSearch } from "@/lib/reco";
-import { usePathname } from "next/navigation";
+
+import { useScrollDirection } from "@/hook/useScrollDirection";
+import { useAuth } from "@/hook/useAuth";
 
 /**
  * Propiedades para `Header`.
@@ -20,80 +22,30 @@ interface HeaderProps {
  * - Contiene un botón de menú para filtros de películas, logo de CODEFLIX, barra de búsqueda input y botón de inicio de sesión.
  */
 export default function Header({ onMenuClick }: HeaderProps) {
-  //Si header es visible 
-  const [visible, setVisible] = useState(true);
-  // Última posición de scroll vertical (para detectar dirección del scroll)
-  const [lastY, setLastY] = useState(0);
+  const router = useRouter();
+
+  // Lógica de Scroll
+  const visible = useScrollDirection();
+  const { user } = useAuth(); // Ya no necesitamos 'loading' aquí si no mostramos spinner
+
   // Valor de entrada para búsqueda
   const [search, setSearch] = useState("");
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
-  const pathname = usePathname();
-
-  // Verificar autenticación
-  const checkAuth = async () => {
-    try {
-      const res = await fetch("/api/me");
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Verificar autenticación al montar y cuando cambie la ruta
-  useEffect(() => {
-    checkAuth();
-  }, [pathname]);
-
-  // Escuchar evento personalizado de login
-  useEffect(() => {
-    const handleLoginSuccess = () => {
-      checkAuth();
-    };
-
-    window.addEventListener("loginSuccess", handleLoginSuccess);
-    return () => window.removeEventListener("loginSuccess", handleLoginSuccess);
-  }, []);
-
-  // Ocultar/mostrar header al hacer scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastY) setVisible(false);
-      else setVisible(true);
-      setLastY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastY]);
 
   /**
    * Maneja eventos del teclado en la entrada de búsqueda.
    * Si al presionar Enter la barra no está vacía, navega a los resultados.
    */
   const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const q = search.trim();
-      if (q !== "") {
-        // Guardar la señal de búsqueda
-        addSearch({ query: q, ts: Date.now() });
-        router.push(`/search?query=${encodeURIComponent(q)}`);
-      }
+    if (e.key === "Enter" && search.trim().length > 0) {
+      const q = search.trim() ;
+      // Guardar la señal de búsqueda
+      addSearch({ query: q, ts: Date.now() });
+      router.push(`/search?query=${encodeURIComponent(q)}`);
     }
   };
 
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST" });
-    setUser(null);
     router.push("/");
   };
 
@@ -142,37 +94,23 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
         {/* Usuario / Login */}
         <div className="flex items-center gap-3">
-          {loading ? (
-            <div className="text-[#4e8a8a] text-sm">Cargando...</div>
-          ) : user ? (
+          {user ? (
             <div className="flex items-center gap-3">
-              <div className="flex flex-col items-end leading-tight">
-                <span className="text-xs text-[#4e8a8a]">Sesión iniciada</span>
-                <span className="text-sm font-medium text-[#004b4b]">
-                  Hola, {user.email}
-                </span>
-              </div>
-
-              {/* Avatar simple con la inicial del correo */}
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[#00b8c4] to-[#6ee7f0] flex items-center justify-center text-white font-semibold text-sm">
-                {user.email?.[0]?.toUpperCase() || "U"}
-              </div>
-
+              <span className="text-sm text-[#b2ecef]">
+                Hola, <span className="font-semibold text-white">{user.email?.split('@')[0]}</span>
+              </span>
+              {/*Botón de logout */}
               <button
                 onClick={handleLogout}
-                className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium
-                bg-[#ef4444] hover:bg-[#dc2626] text-white shadow-md shadow-red-500/30 transition-colors"
+                className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#ef4444] hover:bg-[#dc2626] text-white shadow-md shadow-red-500/30 transition-colors"
               >
                 Cerrar sesión
               </button>
             </div>
           ) : (
             <Link href="/login">
-              <button
-                className="px-4 py-2 rounded-full text-sm font-medium
-                bg-[#00b8c4] text-white hover:bg-[#009ca7]
-                shadow-md shadow-cyan-500/30 transition-colors"
-              >
+              {/*Botón de login */}
+              <button className="px-4 py-2 rounded-full text-sm font-medium bg-[#00b8c4] text-white hover:bg-[#009ca7] shadow-md shadow-cyan-500/30 transition-colors">
                 Iniciar sesión
               </button>
             </Link>

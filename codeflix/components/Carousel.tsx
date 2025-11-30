@@ -2,6 +2,7 @@
 "use client";
 import React from "react";
 import MovieCard from "@/components/MovieCard";
+import type { Movie } from "@/types/codeflix";
 
 // Configuración de fuentes de Google 
 import { Lora } from 'next/font/google';
@@ -21,7 +22,7 @@ const lora = Lora({
  */
 type CarouselProps = {
   title: string;
-  items: any[]; // TMDBMovie[]
+  items: Movie[];
   speed?: number;
   interval?: number;
   onItemClick?: (item: any) => void; 

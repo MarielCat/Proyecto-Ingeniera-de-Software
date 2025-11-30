@@ -1,45 +1,12 @@
 "use client";
+import { useAuth } from "@/hooks/useAuth";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import RecommendationsSection from "./RecommendationsSection";
 
-/**
- * Este componente:
- *  - Revisa si hay usuario autenticado llamando a /api/me
- *  - Si NO hay usuario -> redirige al dashboard principal (ej. "/")
- *  - Si SÍ hay usuario -> muestra la sección de recomendaciones
- */
 export default function RecommendationsPage() {
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const router = useRouter();
+  // Sacar usuario
+  const {user, loading} = useAuth(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        } else {
-          setUser(null);
-          // TODO: si no hay usuario, mandar al dashboard principal real
-          // Cambiar "/" por la ruta real de su dashboard si es diferente.
-          router.push("/");
-        }
-      } catch (err) {
-        setUser(null);
-        router.push("/");
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-
-    fetchUser();
-  }, [router]);
-
-  if (loadingUser) {
+  if (loading) {
     return (
       <main className="min-h-screen pt-20 flex items-center justify-center bg-slate-950 text-slate-200">
         Verificando sesión...
@@ -47,7 +14,7 @@ export default function RecommendationsPage() {
     );
   }
 
-  // Si por alguna razón no hay user, ya se hizo push("/") arriba.
+  // Si por alguna razón no hay user, ya se hizo push("/") en useAuth
   if (!user) return null;
 
   return (
