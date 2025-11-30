@@ -1,7 +1,9 @@
+// codeflix/components/Header.tsx
 "use client";
 import { useState, useEffect, type KeyboardEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { addSearch } from "@/lib/reco";
 import { usePathname } from "next/navigation";
 
 /**
@@ -78,9 +80,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
    * Maneja eventos del teclado en la entrada de búsqueda.
    * Si al presionar Enter la barra no está vacía, navega a los resultados.
    */
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && search.trim() !== "") {
-      router.push(`/search?query=${encodeURIComponent(search)}`);
+  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const q = search.trim();
+      if (q !== "") {
+        // Guardar la señal de búsqueda
+        addSearch({ query: q, ts: Date.now() });
+        router.push(`/search?query=${encodeURIComponent(q)}`);
+      }
     }
   };
 
@@ -111,7 +118,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
           <Link href="/" className="flex items-center gap-2">
             <img
-              src="/2.png"
+              src="/codeflix.png"
               alt="logo"
               className="h-10 w-auto drop-shadow-md"
             />
@@ -188,7 +195,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </div>
       </div>
 
-      {/* Focus states globales para inputs (opcional, pero consistente con tu diseño) */}
       <style>{`
         header input:focus {
           outline: 2px solid #00b8c4;
