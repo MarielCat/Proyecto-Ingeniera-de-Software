@@ -101,7 +101,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         {/* Botón menú + logo */}
         <div className="flex items-center gap-3">
           <button
-            className="p-2 rounded-md hover:bg-[#ccf5f5] text-[#004b4b]"
+            className="p-2 text-xl rounded-md hover:bg-[#ccf5f5] text-[#004b4b]"
             onClick={onMenuClick}
             aria-label="Abrir menú"
             title="Abrir menú"
@@ -113,11 +113,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <img
               src="/2.png"
               alt="logo"
-              className="h-8 w-auto drop-shadow-md"
+              className="h-10 w-auto drop-shadow-md"
             />
-            <span className="hidden sm:inline text-[#004b4b] font-semibold tracking-tight">
-              CodeFlix
-            </span>
           </Link>
         </div>
 
@@ -127,7 +124,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <span className="text-[#5aaeb2] text-sm">🔍</span>
             <input
               type="text"
-              placeholder="Buscar cursos, temas o categorías..."
+              placeholder="Buscar por películas, reparto o equipo..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={handleSearch}
