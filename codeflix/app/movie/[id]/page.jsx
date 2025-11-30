@@ -59,29 +59,28 @@ export default async function MoviePage({ params }) {
       <div className="absolute inset-0 bg-black/70"></div>
       
       {/* Contenido principal */}
-      <div className="relative z-10 px-6 py-10 max-w-3xl mx-auto">
+      <div className="relative z-10 px-6 py-10 max-w-3xl mx-auto mt-4">
         {/*Título y descripción */}
-        <h1 className={`${cinzel.className} text-4xl font-bold text-[#00b8c4]`}>{movie.title}</h1>
+        <h1 className={`${cinzel.className} text-4xl font-bold text-[#3bccd4]`}>{movie.title}</h1>
         <p className="mt-4 text-[#b2ecef]">{movie.overview}</p>
 
         <br></br>
         <br></br>
 
+        {/*Galería de imágenes */}
+        <h2 className={`${cinzel.className} text-2xl font-bold text-[#3bccd4] mb-4`}>
+          Galería
+        </h2>
+        {/* Contenedor con scroll horizontal */}
+        <MovieGallery images={remainingImages} title={movie.title} />
+        <br></br>
+
         {/*Reparto y equipo*/}
-        <h2 className={`${cinzel.className} text-2xl font-bold text-[#00b8c4] mb-4`}>
+        <h2 className={`${cinzel.className} text-2xl font-bold text-[#3bccd4] mb-4`}>
           Reparto y Equipo
         </h2>
         <CastCrew cast={credits.cast} director={credits.director} />
 
-        <br></br>
-        <br></br>
-        {/*Galería de imágenes */}
-        <h2 className={`${cinzel.className} text-2xl font-bold text-[#00b8c4] mb-4`}>
-          Galería
-        </h2>
-
-        {/* Contenedor con scroll horizontal */}
-        <MovieGallery images={remainingImages} title={movie.title} />
       </div>
     </div>
   );
