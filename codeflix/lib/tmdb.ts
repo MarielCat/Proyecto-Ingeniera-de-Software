@@ -34,7 +34,7 @@ export async function getFantasyPopular() {
   return data.results || [];
 }
 
-// Mejor calificadas (fantasía) — con filtro de mínimo de votos
+// Mejor calificadas 
 export async function getFantasyTopRated(minVotes = 200) {
   const res = await fetch(
     `${base}/discover/movie?api_key=${API_KEY}&with_genres=14&language=es-MX&sort_by=vote_average.desc&vote_count.gte=${minVotes}`
@@ -43,7 +43,7 @@ export async function getFantasyTopRated(minVotes = 200) {
   return (data.results || []).filter(m => (m.vote_count || 0) >= minVotes);
 }
 
-// Más recientes (fantasía) — solo hasta hoy
+// Más recientes 
 export async function getFantasyLatest({ from }: { from?: string } = {}) {
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
@@ -98,7 +98,7 @@ export async function getFantasyUpcoming() {
   return data.results || [];
 }
 
-// Recomendadas (fantasía) — usando movie/{id}/recommendations y filtrando al género
+// Recomendadas 
 export async function getRecommendedFantasyByMovieId(id: number) {
   const res = await fetch(`${base}/movie/${id}/recommendations?api_key=${API_KEY}&language=es-MX`);
   const data: TMDBListResponse = await res.json();
@@ -142,6 +142,7 @@ export async function getMovieCredits(id: number) {
 
   return {
     cast: (data.cast || []).slice(0, 10), // Primeros 10 actores
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     director: (data.crew || []).find((person: any) => person.job === 'Director') || null,
   };
 }

@@ -1,4 +1,5 @@
 // codeflix/hooks/usePersonalizedReco.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useState } from "react";
 import { getClicks, getSearches } from "@/lib/reco";

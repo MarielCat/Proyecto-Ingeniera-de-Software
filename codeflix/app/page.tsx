@@ -109,7 +109,7 @@ export default async function Home() {
           </div>
         )}
 
-        {/* Carruseles normales (siempre visibles) */}
+        {/*Carruseles*/}
         <Carousel title="Más populares" items={populares} />
         <Carousel title="Más recientes" items={recientes} />
         <Carousel title="Mejor calificadas" items={topRated} />

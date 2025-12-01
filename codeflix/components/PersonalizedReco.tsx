@@ -1,4 +1,4 @@
-// components/PersonalizedReco.tsx - REEMPLAZAR TODO
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import Carousel from "@/components/Carousel";
@@ -17,7 +17,7 @@ export default function PersonalizedReco() {
       setError(null);
 
       try {
-        const res = await fetch("/api/reco"); // 👈 Ahora es GET, no POST
+        const res = await fetch("/api/reco"); 
         
         if (!res.ok) {
           throw new Error(`Error ${res.status}`);
@@ -42,7 +42,6 @@ export default function PersonalizedReco() {
     };
   }, [refreshKey]);
 
-  // Escuchar cambios
   React.useEffect(() => {
     const handleUpdate = () => {
       console.log("[Reco] Actualizando recomendaciones...");
@@ -79,7 +78,7 @@ export default function PersonalizedReco() {
     return (
       <div className="bg-[#00b8c4]/10 border border-[#00b8c4]/30 rounded-lg p-6 text-center">
         <p className="text-[#b2ecef]">
-          ✨ Empieza a explorar películas para recibir recomendaciones personalizadas
+          Empieza a explorar películas para recibir recomendaciones personalizadas
         </p>
       </div>
     );

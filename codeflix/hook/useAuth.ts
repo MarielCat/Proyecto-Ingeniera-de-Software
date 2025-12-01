@@ -1,4 +1,5 @@
 // hook/useAuth.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 
 export function useAuth() {

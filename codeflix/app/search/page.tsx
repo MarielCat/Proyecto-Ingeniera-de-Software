@@ -9,6 +9,26 @@ type SearchPageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+interface TmdbMovie {
+  id: number;
+  title?: string;
+  name?: string;
+  overview?: string;
+  poster_path?: string | null;
+  backdrop_path?: string | null;
+  genre_ids?: number[];
+  popularity?: number;
+  vote_average?: number;
+  release_date?: string;
+}
+
+interface TmdbResults<T> {
+  page?: number;
+  results?: T[];
+  total_pages?: number;
+  total_results?: number;
+}
+
 /**
  * Página de Resultados de Búsqueda .
  * - Recibe un término de búsqueda.
@@ -36,9 +56,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   // Mantiene los resultados en caché por 60 segundos para optimizar rendimiento
   const res = await fetch(url, { next: { revalidate: 60 } });
-  const data = await res.json();
+  const data: TmdbResults<TmdbMovie> = await res.json();
 
-  const results = data.results || [];
+  const results: TmdbMovie[] = (data.results ?? []).filter((m) => (m.genre_ids ?? []).includes(14));
 
   return (
     <div className="px-6 py-10">
@@ -53,7 +73,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* Muestra la lista de tarjetas de películas resultantes*/}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {results.map((movie: any) => (
+        {results.map((movie: TmdbMovie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
