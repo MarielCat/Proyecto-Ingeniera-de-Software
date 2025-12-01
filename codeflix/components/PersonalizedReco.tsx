@@ -1,69 +1,58 @@
-// codeflix/components/PersonalizedReco.tsx
+// components/PersonalizedReco.tsx - REEMPLAZAR TODO
 "use client";
 import React from "react";
 import Carousel from "@/components/Carousel";
-import { getClicks, getSearches } from "@/lib/reco";
-
-async function fetchRecoFromServer(clickIds: number[], queries: string[]) {
-  try {
-    const res = await fetch("/api/reco", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ clickIds, queries }),
-    });
-    
-    if (!res.ok) {
-      console.warn("Reco API error:", res.status);
-      return [];
-    }
-    
-    const data = await res.json();
-    return Array.isArray(data?.items) ? data.items : [];
-  } catch (err) {
-    console.error("Error fetching recommendations:", err);
-    return [];
-  }
-}
 
 export default function PersonalizedReco() {
   const [items, setItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
   React.useEffect(() => {
     let mounted = true;
 
-    async function build() {
+    async function fetchReco() {
       setLoading(true);
       setError(null);
 
       try {
-        const clicks = getClicks(8);
-        const searches = getSearches(5);
-
-        console.log("[Reco] clicks:", clicks);
-        console.log("[Reco] searches:", searches);
-
-        const clickIds = clicks.map((c) => c.movieId);
-        const queries = searches.map((s) => s.query);
-
-        const reco = await fetchRecoFromServer(clickIds, queries);
-        console.log("[Reco] resultado API:", reco);
-
+        const res = await fetch("/api/reco"); // 👈 Ahora es GET, no POST
+        
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
         if (mounted) {
-          setItems(reco);
+          setItems(Array.isArray(data?.items) ? data.items : []);
         }
       } catch (e: any) {
         console.error("[Reco] error:", e);
-        if (mounted) setError(e?.message ?? "Error construyendo recomendaciones");
+        if (mounted) setError(e?.message ?? "Error cargando recomendaciones");
       } finally {
         if (mounted) setLoading(false);
       }
     }
 
-    build();
+    fetchReco();
     return () => {
       mounted = false;
+    };
+  }, [refreshKey]);
+
+  // Escuchar cambios
+  React.useEffect(() => {
+    const handleUpdate = () => {
+      console.log("[Reco] Actualizando recomendaciones...");
+      setRefreshKey(prev => prev + 1);
+    };
+
+    window.addEventListener("recoUpdated", handleUpdate);
+    
+    return () => {
+      window.removeEventListener("recoUpdated", handleUpdate);
     };
   }, []);
 
@@ -81,7 +70,7 @@ export default function PersonalizedReco() {
   if (error) {
     return (
       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
-        <p className="text-sm text-red-400">❌ Error: {error}</p>
+        <p className="text-sm text-red-400">⚠️ Error: {error}</p>
       </div>
     );
   }
@@ -90,7 +79,7 @@ export default function PersonalizedReco() {
     return (
       <div className="bg-[#00b8c4]/10 border border-[#00b8c4]/30 rounded-lg p-6 text-center">
         <p className="text-[#b2ecef]">
-          Empieza a explorar películas para recibir recomendaciones personalizadas
+          ✨ Empieza a explorar películas para recibir recomendaciones personalizadas
         </p>
       </div>
     );

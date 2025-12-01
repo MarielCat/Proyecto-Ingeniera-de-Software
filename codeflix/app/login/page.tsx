@@ -34,7 +34,7 @@ export default function LoginPage() {
       }
 
       if (mode === "register") {
-        setMessage("✅ Usuario creado, ahora inicia sesión.");
+        setMessage("Usuario creado, ahora inicia sesión.");
         setMode("login");
         setPassword("");
         setLoading(false);

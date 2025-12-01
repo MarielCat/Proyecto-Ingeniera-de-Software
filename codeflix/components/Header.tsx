@@ -39,7 +39,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
     if (e.key === "Enter" && search.trim().length > 0) {
       const q = search.trim() ;
       // Guardar la señal de búsqueda
-      addSearch({ query: q, ts: Date.now() });
+      addSearch(q);
       router.push(`/search?query=${encodeURIComponent(q)}`);
     }
   };
