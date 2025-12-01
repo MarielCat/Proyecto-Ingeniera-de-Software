@@ -5,7 +5,6 @@ import Image from "next/image";
 import type { Movie } from "@/types/codeflix";
 
 // Configuración de fuentes de Google 
-// Configuración de fuentes de Google 
 import { Cinzel } from 'next/font/google';
 const cinzel = Cinzel({ 
     subsets: ['latin'], 

@@ -35,12 +35,15 @@ export default function Header({ onMenuClick }: HeaderProps) {
    * Maneja eventos del teclado en la entrada de búsqueda.
    * Si al presionar Enter la barra no está vacía, navega a los resultados.
    */
-  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && search.trim().length > 0) {
-      const q = search.trim() ;
-      // Guardar la señal de búsqueda
-      addSearch(q);
+  const handleSearch = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const q = search.trim();
+      if (q.length === 0) return;
+  
+      const ok = await addSearch(q); // registra señal y dispara recoUpdated
       router.push(`/search?query=${encodeURIComponent(q)}`);
+      // Opcional: si ok, limpiar input
+      // if (ok) setSearch("");
     }
   };
 

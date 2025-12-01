@@ -8,12 +8,12 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
+    setMessage(null);
     setLoading(true);
 
     const url = mode === "login" ? "/api/login" : "/api/register";
@@ -28,13 +28,13 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message || "Error");
+        setMessage({ text: data.message || "Error", type: "error" });
         setLoading(false);
         return;
       }
 
       if (mode === "register") {
-        setMessage("Usuario creado, ahora inicia sesión.");
+        setMessage({ text: "Usuario creado, ahora inicia sesión.", type: "success" });
         setMode("login");
         setPassword("");
         setLoading(false);
@@ -47,9 +47,12 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err) {
-      setMessage("Error de conexión");
+      const errorText =
+        err instanceof Error ? err.message : "Error de conexión";
+      setMessage({ text: errorText, type: "error" }); // objeto válido
       setLoading(false);
     }
+    
   };
 
   return (
@@ -59,23 +62,27 @@ export default function LoginPage() {
         className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-4 border border-white/20"
       >
         <div className="text-center mb-6">
-<div className="w-40 h-40 mx-auto mb-4 rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-lg shadow-white/20">
-  <img src="/codeflix.png" alt="CodeFlix" className="w-28" />
-</div>      
+          <div className="w-40 h-40 mx-auto mb-4 rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-lg shadow-white/20">
+            <img src="/codeflix.png" alt="CodeFlix" className="w-28" />
+          </div>      
           <h1 className="text-2xl font-bold text-white">
             {mode === "login" ? "Iniciar sesión" : "Crear cuenta"}
           </h1>
         </div>
 
         {message && (
-          <div className={`text-sm text-center p-3 rounded-lg ${
-            message.includes("Éxito!") 
-              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" 
-              : "bg-red-500/20 text-red-300 border border-red-500/30"
-          }`}>
-            {message}
+          <div
+            className={`text-sm text-center p-3 rounded-lg ${
+              message.type === "success"
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                : "bg-red-500/20 text-red-300 border border-red-500/30"
+            }`}
+          >
+            {message.text}
           </div>
         )}
+
+
 
         <div>
           <label className="block text-sm text-[#b2ecef] mb-1">Correo</label>
@@ -113,11 +120,12 @@ export default function LoginPage() {
           type="button"
           onClick={() => {
             setMode(mode === "login" ? "register" : "login");
-            setMessage("");
-          }}
+            setMessage(null); // correcto para el tipo {text,type} | null
+          }}          
           className="w-full text-sm text-[#b2ecef] hover:text-white mt-2 transition"
           disabled={loading}
         >
+
           {mode === "login"
             ? "¿No tienes cuenta? Regístrate"
             : "¿Ya tienes cuenta? Inicia sesión"}

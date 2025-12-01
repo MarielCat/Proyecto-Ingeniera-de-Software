@@ -1,9 +1,12 @@
 // codeflix/components/Carousel.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import React from "react";
 import MovieCard from "@/components/MovieCard";
 import type { Movie } from "@/types/codeflix";
+import { addClick } from "@/lib/reco";
+
 
 // Configuración de fuentes de Google 
 import { Lora } from 'next/font/google';
@@ -36,14 +39,10 @@ type CarouselProps = {
  * - Scroll infinito (bucle visual).
  * - Interacción manual con rueda del mouse.
  */
-export default function Carousel({
-  title,
-  items,
-  speed = 0.8, 
-  interval = 16,
-  onItemClick,
+export default function Carousel({ title, items, speed = 0.8,  interval = 16, onItemClick,
 }: CarouselProps) {
 
+  
   // Ref para detectar si el usuario está interactuando (detendrá la animación)
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -158,9 +157,11 @@ export default function Carousel({
     };
   }, [loopItems]);
 
-  const handleCardClick = (item: any) => {
-    // dispara la señal hacia el padre si existe
-    onItemClick?.(item);
+  const handleCardClick = async (item: Movie) => {
+    // Registra la señal de click
+    await addClick(item.id);
+    // No navegas aquí; MovieCard hará el Link
+    // PersonalizedReco se refrescará por el evento recoUpdated
   };
 
   return (
@@ -182,18 +183,10 @@ export default function Carousel({
               <div
                 key={`${item.id}-${idx}`}
                 className="w-36 sm:w-40 md:w-44 flex-shrink-0 inline-block align-top"
+                // Usamos onClick en el contenedor
+                onClick={() => handleCardClick(item)}
               >
-                {/* Si MovieCard ya maneja la navegación interna,
-                    puedes envolverlo en un botón; de lo contrario,
-                    pasa un onClick al contenedor */}
-                <button
-                  type="button"
-                  onClick={() => handleCardClick(item)}
-                  className="w-full text-left focus:outline-none"
-                  aria-label={`Ver ${item.title || item.name}`}
-                >
-                  <MovieCard movie={item} />
-                </button>
+                <MovieCard movie={item} />
               </div>
             ))
           ) : (

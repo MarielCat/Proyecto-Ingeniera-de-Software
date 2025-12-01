@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "reset:reco:ts": "ts-node scripts/reset-user-reco.ts",
+    "reset:reco": "node scripts/reset-user-reco.js"
+
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
