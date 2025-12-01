@@ -73,7 +73,6 @@ export default async function Home() {
 
   return (
     <>
-      
 
       {/* Secciones (bloque de recomendaciones del server) */}
       <main className="px-6 max-w-7xl mx-auto h-full pt-[2vw]">
