@@ -30,7 +30,7 @@ export async function addSearch(rawQuery: string): Promise<boolean> {
   if (query.length < 2) return false;
 
   try {
-    const res = await fetch("/api/signal", {
+    const res = await fetch("/api/signals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type: "search", query }),
