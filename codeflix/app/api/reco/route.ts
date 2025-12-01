@@ -1,8 +1,21 @@
-// codeflix/app/api/reco/route.ts
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import prisma from "@/lib/prisma";
 
+const JWT_SECRET = process.env.JWT_SECRET as string;
 const API_KEY = process.env.TMDB_KEY;
 const base = "https://api.themoviedb.org/3";
+
+function getUserIdFromRequest(request: Request): number | null {
+  const token = request.cookies.get("codeflix_token")?.value;
+  if (!token) return null;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    return decoded.userId;
+  } catch {
+    return null;
+  }
+}
 
 async function getRecommendationsForIds(ids: number[]) {
   const promises = ids.map((id) =>
@@ -27,16 +40,36 @@ async function searchFantasyByQueries(queries: string[]) {
   return results.flat();
 }
 
-export async function POST(req: Request) {
+export async function GET(request: Request) {
+  const userId = getUserIdFromRequest(request);
+  
+  if (!userId) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
   try {
-    const { clickIds = [], queries = [] } = await req.json();
+    // 🔥 Obtener clicks del usuario desde la DB
+    const clicks = await prisma.userClick.findMany({
+      where: { userId },
+      orderBy: { timestamp: 'desc' },
+      take: 10
+    });
+
+    // 🔥 Obtener búsquedas del usuario desde la DB
+    const searches = await prisma.userSearch.findMany({
+      where: { userId },
+      orderBy: { timestamp: 'desc' },
+      take: 10
+    });
+
+    const clickIds = clicks.map(c => c.movieId);
+    const queries = searches.map(s => s.query);
 
     const [byClicks, bySearches] = await Promise.all([
       clickIds.length ? getRecommendationsForIds(clickIds) : Promise.resolve([]),
       queries.length ? searchFantasyByQueries(queries) : Promise.resolve([]),
     ]);
 
-    // Mezclar y deduplicar con score simple
     const map = new Map<number, any>();
     const pushUnique = (arr: any[], weight: number) => {
       for (const m of arr) {
@@ -56,7 +89,6 @@ export async function POST(req: Request) {
     merged.sort((a, b) => (b.__score || 0) - (a.__score || 0));
     merged = merged.slice(0, 20);
 
-    // Fallback si vacío: trending fantasía
     if (merged.length === 0) {
       const res = await fetch(`${base}/trending/movie/week?api_key=${API_KEY}&language=es-MX`);
       const data = await res.json();
@@ -65,8 +97,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ items: merged });
-  } catch (e: any) {
-    console.error("Reco route error:", e);
-    return NextResponse.json({ items: [] }, { status: 200 });
+  } catch (error) {
+    console.error("Error en recomendaciones:", error);
+    return NextResponse.json({ items: [] }, { status: 500 });
   }
 }

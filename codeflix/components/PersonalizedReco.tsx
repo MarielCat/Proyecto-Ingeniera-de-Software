@@ -1,105 +1,93 @@
-// codeflix/components/PersonalizedReco.tsx
+// components/PersonalizedReco.tsx - REEMPLAZAR TODO
 "use client";
-import { useState, useEffect } from "react";
+import React from "react";
 import Carousel from "@/components/Carousel";
-import { getClicks, getSearches } from "@/lib/reco";
-import type { Movie } from "@/types/codeflix";
-
-// Configuración de fuentes de Google 
-import { Lora } from 'next/font/google';
-const lora = Lora({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
-
-// Si por ahora no existe tmdb-client ni endpoint,
-// usa un fetch o muestra mock.
-async function fetchRecoFromServer(clickIds: number[], queries: string[]) {
-  const res = await fetch("/api/reco", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ clickIds, queries }),
-  });
-  if (!res.ok) {
-    console.warn("Reco API error:", res.status);
-    return [];
-  }
-  const data = await res.json();
-  return Array.isArray(data?.items) ? data.items : [];
-}
 
 export default function PersonalizedReco() {
-  const [items, setItems] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [items, setItems] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let mounted = true;
 
-    async function build() {
+    async function fetchReco() {
       setLoading(true);
       setError(null);
 
       try {
-        const clicks = getClicks(8);
-        const searches = getSearches(5);
-
-        console.log("[Reco] clicks:", clicks);
-        console.log("[Reco] searches:", searches);
-
-        const clickIds = clicks.map((c) => c.movieId);
-        const queries = searches.map((s) => s.query);
-
-        // Si no tienes el endpoint aún, como prueba, usa fallback de trending desde servidor:
-        // const trending = await getFantasyTrending(); // no disponible en cliente directamente
-        // setItems(trending.slice(0, 20));
-        // return;
-
-        const reco = await fetchRecoFromServer(clickIds, queries);
-        console.log("[Reco] resultado API:", reco);
-
+        const res = await fetch("/api/reco"); // 👈 Ahora es GET, no POST
+        
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
         if (mounted) {
-          setItems(reco);
+          setItems(Array.isArray(data?.items) ? data.items : []);
         }
       } catch (e: any) {
         console.error("[Reco] error:", e);
-        if (mounted) setError(e?.message ?? "Error construyendo recomendaciones");
+        if (mounted) setError(e?.message ?? "Error cargando recomendaciones");
       } finally {
         if (mounted) setLoading(false);
       }
     }
 
-    build();
+    fetchReco();
     return () => {
       mounted = false;
     };
+  }, [refreshKey]);
+
+  // Escuchar cambios
+  React.useEffect(() => {
+    const handleUpdate = () => {
+      console.log("[Reco] Actualizando recomendaciones...");
+      setRefreshKey(prev => prev + 1);
+    };
+
+    window.addEventListener("recoUpdated", handleUpdate);
+    
+    return () => {
+      window.removeEventListener("recoUpdated", handleUpdate);
+    };
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00b8c4]"></div>
+          <p className="text-sm text-[#b2ecef]">Cargando tus recomendaciones...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+        <p className="text-sm text-red-400">⚠️ Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="bg-[#00b8c4]/10 border border-[#00b8c4]/30 rounded-lg p-6 text-center">
+        <p className="text-[#b2ecef]">
+          ✨ Empieza a explorar películas para recibir recomendaciones personalizadas
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="mt-4">
-      <h2 className={`${lora.className} text-2xl font-bold text-[#3bccd4] mb-4`}>Podría gustarte…</h2>
-
-      {loading && (
-        <p className={`${lora.className} text-sm text-[#b2ecef]`}>Cargando recomendaciones…</p>
-      )}
-
-      {error && (
-        <p className={`${lora.className} text-sm text-red-400`}>Error: {error}</p>
-      )}
-
-      {/* Muestra el conteo para confirmar visualmente */}
-      {!loading && !error && (
-        <p className="text-xs text-[#b2ecef] mb-2">
-          {items.length ? `Encontradas ${items.length} recomendaciones.` : "Sin recomendaciones por ahora."}
-        </p>
-      )}
-
-      {/* Renderiza el Carousel solo si hay items */}
-      {items.length > 0 ? (
-        <Carousel title="" items={items} speed={1.5} />
-      ) : null}
+      <Carousel title="" items={items} speed={1.5} />
     </section>
   );
 }

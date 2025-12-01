@@ -9,89 +9,114 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
+    setLoading(true);
 
     const url = mode === "login" ? "/api/login" : "/api/register";
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      setMessage(data.message || "Error");
-      return;
-    }
+      if (!res.ok) {
+        setMessage(data.message || "Error");
+        setLoading(false);
+        return;
+      }
 
-    if (mode === "register") {
-      setMessage("Usuario creado, ahora inicia sesión.");
-      setMode("login");
-      setPassword("");
-    } else {
-      // Disparar evento para actualizar el Header
-      window.dispatchEvent(new Event("loginSuccess"));
-      // Redirigir a /movie (tu dashboard de películas)
-      router.push("/movie");
+      if (mode === "register") {
+        setMessage("Usuario creado, ahora inicia sesión.");
+        setMode("login");
+        setPassword("");
+        setLoading(false);
+      } else {
+        // Disparar evento para actualizar el Header
+        window.dispatchEvent(new Event("loginSuccess"));
+        
+        // Redirigir al dashboard principal
+        router.push("/");
+        router.refresh();
+      }
+    } catch (err) {
+      setMessage("Error de conexión");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#004b4b] to-[#002b2b]">
       <form
         onSubmit={handleSubmit}
-        className="bg-slate-800 p-8 rounded-xl shadow-lg w-full max-w-sm space-y-4"
+        className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-4 border border-white/20"
       >
-        <h1 className="text-xl font-bold text-white text-center">
-          {mode === "login" ? "Iniciar sesión" : "Crear cuenta"}
-        </h1>
+        <div className="text-center mb-6">
+<div className="w-40 h-40 mx-auto mb-4 rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-lg shadow-white/20">
+  <img src="/codeflix.png" alt="CodeFlix" className="w-28" />
+</div>      
+          <h1 className="text-2xl font-bold text-white">
+            {mode === "login" ? "Iniciar sesión" : "Crear cuenta"}
+          </h1>
+        </div>
 
         {message && (
-          <p className="text-sm text-center text-emerald-300">{message}</p>
+          <div className={`text-sm text-center p-3 rounded-lg ${
+            message.includes("Éxito!") 
+              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" 
+              : "bg-red-500/20 text-red-300 border border-red-500/30"
+          }`}>
+            {message}
+          </div>
         )}
 
         <div>
-          <label className="block text-sm text-slate-200 mb-1">Correo</label>
+          <label className="block text-sm text-[#b2ecef] mb-1">Correo</label>
           <input
             type="email"
-            className="w-full rounded-md px-3 py-2 bg-slate-900 border border-slate-700 text-slate-100"
+            className="w-full rounded-lg px-4 py-2 bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:border-[#00b8c4] focus:outline-none transition"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
         <div>
-          <label className="block text-sm text-slate-200 mb-1">
-            Contraseña
-          </label>
+          <label className="block text-sm text-[#b2ecef] mb-1">Contraseña</label>
           <input
             type="password"
-            className="w-full rounded-md px-3 py-2 bg-slate-900 border border-slate-700 text-slate-100"
+            className="w-full rounded-lg px-4 py-2 bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:border-[#00b8c4] focus:outline-none transition"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full mt-2 py-2 rounded-md font-semibold bg-emerald-500 hover:bg-emerald-600"
+          disabled={loading}
+          className="w-full mt-4 py-3 rounded-lg font-semibold bg-[#00b8c4] hover:bg-[#009ca7] text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {mode === "login" ? "Entrar" : "Registrarme"}
+          {loading ? "Cargando..." : mode === "login" ? "Entrar" : "Registrarme"}
         </button>
 
         <button
           type="button"
-          onClick={() =>
-            setMode(mode === "login" ? "register" : "login")
-          }
-          className="w-full text-xs text-slate-300 mt-2 underline"
+          onClick={() => {
+            setMode(mode === "login" ? "register" : "login");
+            setMessage("");
+          }}
+          className="w-full text-sm text-[#b2ecef] hover:text-white mt-2 transition"
+          disabled={loading}
         >
           {mode === "login"
             ? "¿No tienes cuenta? Regístrate"
