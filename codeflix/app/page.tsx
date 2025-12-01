@@ -1,7 +1,8 @@
-// codeflix/app/page.tsx (Home)
+// codeflix/app/page.tsx
 import Carousel from "@/components/Carousel";
-import { addClick } from "@/lib/reco";
 import PersonalizedReco from "@/components/PersonalizedReco";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 import {
   getFantasyPopular,
@@ -13,7 +14,6 @@ import {
   getGenres,
 } from "@/lib/tmdb";
 
-// Configuración de fuentes de Google 
 import { Lora } from 'next/font/google';
 const lora = Lora({
   subsets: ['latin'],
@@ -22,11 +22,33 @@ const lora = Lora({
   display: 'swap',
 });
 
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
 /**
- * Página principal de la aplicación.
- * * @returns {JSX.Element} La estructura principal de la Home con múltiples carruseles.
+ * Verifica si hay un usuario autenticado en el servidor
  */
+async function getAuthUser() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("codeflix_token");
+
+    if (!token) return null;
+
+    const decoded = jwt.verify(token.value, JWT_SECRET) as {
+      userId: number;
+      email: string;
+    };
+
+    return decoded;
+  } catch (err) {
+    return null;
+  }
+}
+
 export default async function Home() {
+  // Verificar si hay usuario autenticado
+  const user = await getAuthUser();
+
   const [
     populares,
     topRated,
@@ -45,26 +67,16 @@ export default async function Home() {
     getRecommendedFantasyByMovieId(120),
   ]);
 
-  // Si no hay recomendaciones específicas para usuario, usamos tendencias generales
   const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
   const localBackgroundImage = "/purple-magic-sparkling-shining-stars.png";
 
-  // Imagen con un overlay negro para legibilidad
   const backgroundStyle = `
     linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url('${localBackgroundImage}')
   `;
-  
-const handleItemClick = (item) => {
-    addClick({
-      movieId: item.id,
-      genreIds: item.genre_ids,
-      ts: Date.now(),
-    });
-  };
 
-return (
+  return (
     <>
       {/* Contenedor con fondo */}
       <div 
@@ -79,26 +91,30 @@ return (
 
       {/* Secciones */}
       <main className="px-6 max-w-7xl mx-auto">
-        <PersonalizedReco />
+        {/* MOSTRAR RECOMENDACIONES PERSONALIZADAS SOLO SI HAY SESIÓN */}
+        {user && (
+          <div className="mb-8">
+            <div className="bg-gradient-to-r from-[#00b8c4]/20 to-[#00a4ad]/20 backdrop-blur-sm border border-[#00b8c4]/30 rounded-2xl p-6 mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl"></span>
+                <h2 className={`${lora.className} text-2xl font-bold text-[#00e5ff]`}>
+                  Recomendado para ti, {user.email.split('@')[0]}
+                </h2>
+              </div>
+              <p className="text-[#b2ecef] text-sm">
+                Basado en tus búsquedas y películas que has explorado
+              </p>
+            </div>
+            <PersonalizedReco />
+          </div>
+        )}
+
+        {/* Carruseles normales (siempre visibles) */}
         <Carousel title="Más populares" items={populares} />
         <Carousel title="Más recientes" items={recientes} />
         <Carousel title="Mejor calificadas" items={topRated} />
         <Carousel title="Próximos estrenos" items={proximos} />
         <Carousel title="Recomendadas" items={recomendadas} />
-
-        {/*<h2 className={`${lora.className} text-2xl font-bold text-[#00a4ad] mb-4`}>Géneros</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 pb-10">
-          {Array.isArray(genres) &&
-            genres.map((g) => (
-              <div
-                key={g.id}
-                className="bg-[#00b8c41a] border border-[#00b8c4] text-[#e7fafa] rounded-lg px-3 py-2 text-center text-sm backdrop-blur-sm"
-              >
-                {g.name}
-              </div>
-            ))}
-        </div>
-        */}
       </main>
     </>
   );

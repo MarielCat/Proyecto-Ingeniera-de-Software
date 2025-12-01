@@ -46,7 +46,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST" });
-    router.push("/");
+    window.location.href = "/";
   };
 
 
@@ -93,12 +93,12 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </div>
 
         {/* Usuario / Login */}
+    <div className="flex items-center gap-3">
+      {user ? (
         <div className="flex items-center gap-3">
-          {user ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-[#b2ecef]">
-                Hola, <span className="font-semibold text-white">{user.email?.split('@')[0]}</span>
-              </span>
+          <span className="text-sm text-[#004b4b] font-medium">
+            Hola, <span className="font-semibold text-[#002b2b]">{user.email?.split('@')[0]}</span>
+          </span>
               {/*Botón de logout */}
               <button
                 onClick={handleLogout}
