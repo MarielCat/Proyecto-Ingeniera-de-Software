@@ -23,6 +23,12 @@ const lora = Lora({
   display: 'swap',
 });
 
+const localBackgroundImage = "/purple-magic-sparkling-shining-stars.png";
+  const backgroundStyle = `
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('${localBackgroundImage}')
+  `;
+
 
 /**
  * Layout Raíz de la Aplicación.
@@ -81,7 +87,17 @@ export default function RootLayout({
         <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
         {/* Contenido principal*/}
-        <div className={`bg-transparent transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className={` overflow-x-hidden bg-transparent transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+          {/* Contenedor con fondo */}
+          <div 
+            className="fixed inset-0 w-full h-full -z-10"
+            style={{
+              backgroundImage: backgroundStyle,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
           {children}
         </div>
 

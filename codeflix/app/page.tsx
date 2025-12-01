@@ -3,6 +3,7 @@ import Carousel from "@/components/Carousel";
 import PersonalizedReco from "@/components/PersonalizedReco";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import HomeClient from "@/components/HomeClient";
 
 import {
   getFantasyPopular,
@@ -69,33 +70,16 @@ export default async function Home() {
 
   const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
 
-  const localBackgroundImage = "/purple-magic-sparkling-shining-stars.png";
-
-  const backgroundStyle = `
-    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url('${localBackgroundImage}')
-  `;
 
   return (
     <>
-      {/* Contenedor con fondo */}
-      <div 
-        className="fixed inset-0 w-full h-full -z-10"
-        style={{
-          backgroundImage: backgroundStyle,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
 
-      {/* Secciones */}
-      <main className="px-6 max-w-7xl mx-auto h-full pb-[10vh] lg:pb-[5vh]">
-        {/* MOSTRAR RECOMENDACIONES PERSONALIZADAS SOLO SI HAY SESIÓN */}
+      {/* Secciones (bloque de recomendaciones del server) */}
+      <main className="px-6 max-w-7xl mx-auto h-full pt-[2vw]">
         {user && (
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-[#00b8c4]/20 to-[#00a4ad]/20 backdrop-blur-sm border border-[#00b8c4]/30 rounded-2xl p-6 mb-6">
-              <div className="flex items-center gap-3 mb-2">
+          <div className="">
+            <div className="bg-gradient-to-r from-[#00b8c4]/20 to-[#00a4ad]/20 backdrop-blur-sm border border-[#00b8c4]/30 rounded-2xl p-6 ">
+              <div className="flex items-center gap-3">
                 <span className="text-2xl"></span>
                 <h2 className={`${lora.className} text-2xl font-bold text-[#00e5ff]`}>
                   Recomendado para ti, {user.email.split('@')[0]}
@@ -108,14 +92,17 @@ export default async function Home() {
             <PersonalizedReco />
           </div>
         )}
-
-        {/*Carruseles*/}
-        <Carousel title="Más populares" items={populares} />
-        <Carousel title="Más recientes" items={recientes} />
-        <Carousel title="Mejor calificadas" items={topRated} />
-        <Carousel title="Próximos estrenos" items={proximos} />
-        <Carousel title="Recomendadas" items={recomendadas} />
       </main>
+
+      {/* HomeClient: Header + SideMenu + carruseles + resultados filtrados */}
+      <HomeClient
+        populares={populares}
+        recientes={recientes}
+        topRated={topRated}
+        proximos={proximos}
+        recomendadas={recomendadas}
+        userName={user ? user.email.split('@')[0] : null}
+      />
     </>
   );
 }

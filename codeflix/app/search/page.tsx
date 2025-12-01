@@ -61,7 +61,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const results: TmdbMovie[] = (data.results ?? []).filter((m) => (m.genre_ids ?? []).includes(14));
 
   return (
-    <div className="px-6 py-10">
+    <div className="px-6 py-10 pt-[20vh] text-white">
       <h1 className="text-4xl font-extrabold mb-6">
         Resultados para: <span className="text-[#007f88]">«{query}»</span>
       </h1>
