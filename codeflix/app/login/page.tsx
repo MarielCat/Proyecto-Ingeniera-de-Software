@@ -53,7 +53,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#004b4b] to-[#002b2b]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#004b4b] to-[#002b2b] pt-[7vh]">
       <form
         onSubmit={handleSubmit}
         className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-4 border border-white/20"

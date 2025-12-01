@@ -48,7 +48,7 @@ export default function RootLayout({
       <body className="">
         {showHero && (
           /* Contenedor  con Video de Fondo */
-          <div className="relative w-full h-[30vw] overflow-hidden flex items-center justify-center">
+          <div className="relative w-full h-[90vw] md:h-[40vh] lg:h-[30vw] overflow-hidden flex items-center justify-center">
             {/*Video bg */}
             <video
               className="absolute inset-0 w-full h-full object-cover"
@@ -62,7 +62,7 @@ export default function RootLayout({
             <div className="absolute inset-0 bg-[#004b4b]/70" />
 
             {/* Texto central */}
-            <div className="relative text-center pt-[14%] text-white font-bold py-16">
+            <div className="relative text-center pt-[60vw] md:pt-[10vw] lg:pt-[14%] text-white font-bold px-10 py-20 lg:py-16">
               <h1 className={`${cinzel.className} text-7xl font-extrabold  mb-6`}>
                 CodeFlix
               </h1>
@@ -81,7 +81,7 @@ export default function RootLayout({
         <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
         {/* Contenido principal*/}
-        <div className={`bg-transparent pt-[3%] transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
+        <div className={`bg-transparent transition-all duration-300 ${menuOpen ? "opacity-40" : "opacity-100"}`}>
           {children}
         </div>
 
