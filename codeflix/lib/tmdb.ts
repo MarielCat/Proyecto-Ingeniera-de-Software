@@ -180,3 +180,20 @@ export async function getMovieKeywords(id: number) {
   const data: TMDBKeywordsResponse = await res.json();
   return data?.keywords || [];
 }
+
+export async function getFantasyKids() {
+  const params = new URLSearchParams({
+    api_key: API_KEY!,
+    with_genres: "14",           // Fantasía
+    language: "es-MX",
+    include_adult: "false",      // Excluir adulto
+    sort_by: "popularity.desc",
+    "certification.lte": "PG",   // Apto para niños: G y PG
+  });
+
+  const res = await fetch(`${base}/discover/movie?${params.toString()}`);
+  const data: TMDBListResponse = await res.json();
+  const results = data.results || [];
+
+  return results.filter((m) => (m.genre_ids || []).includes(14));
+}

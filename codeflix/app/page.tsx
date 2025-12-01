@@ -1,5 +1,4 @@
 // codeflix/app/page.tsx
-import Carousel from "@/components/Carousel";
 import PersonalizedReco from "@/components/PersonalizedReco";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
@@ -11,9 +10,10 @@ import {
   getFantasyLatest,
   getFantasyUpcoming,
   getFantasyTrending,
-  getRecommendedFantasyByMovieId,
   getGenres,
+  getFantasyKids, // nuevo
 } from "@/lib/tmdb";
+
 
 import { Lora } from 'next/font/google';
 const lora = Lora({
@@ -56,19 +56,17 @@ export default async function Home() {
     recientes,
     proximos,
     trendingFallback,
-    genres,
-    recomendadasSeed,
+    kids, // nuevo
   ] = await Promise.all([
     getFantasyPopular(),
     getFantasyTopRated(200),
     getFantasyLatest(),
     getFantasyUpcoming(),
     getFantasyTrending(),
-    getGenres(),
-    getRecommendedFantasyByMovieId(120),
+    getFantasyKids(), // nuevo
   ]);
 
-  const recomendadas = recomendadasSeed?.length ? recomendadasSeed : trendingFallback;
+
 
 
   return (
@@ -100,9 +98,11 @@ export default async function Home() {
         recientes={recientes}
         topRated={topRated}
         proximos={proximos}
-        recomendadas={recomendadas}
+        kids={kids} // <- prop correcta
         userName={user ? user.email.split('@')[0] : null}
       />
+
+
     </>
   );
 }

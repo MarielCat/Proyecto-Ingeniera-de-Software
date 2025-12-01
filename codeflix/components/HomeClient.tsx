@@ -11,7 +11,7 @@ import Carousel from "@/components/Carousel";
  * @property recientes - Lista de películas recientes (fantasía) precargadas en el servidor.
  * @property topRated - Lista de películas mejor calificadas (fantasía) precargadas en el servidor.
  * @property proximos - Lista de próximos estrenos (fantasía) precargadas en el servidor.
- * @property recomendadas - Lista de recomendadas (fallback/trending o seeds) precargadas en el servidor.
+ * @property kids - Lista de recomendadas infantiles
  * @property userName - Nombre del usuario autenticado (opcional) para personalizar mensajes.
  */
 interface HomeClientProps {
@@ -19,9 +19,10 @@ interface HomeClientProps {
   recientes: any[];
   topRated: any[];
   proximos: any[];
-  recomendadas: any[];
+  kids: any[];         // nueva prop
   userName?: string | null;
 }
+
 
 /**
  * `HomeClient`
@@ -34,7 +35,7 @@ export default function HomeClient({
   recientes,
   topRated,
   proximos,
-  recomendadas,
+  kids,
   userName,
 }: HomeClientProps) {
   // Estado del menú lateral
@@ -67,7 +68,7 @@ export default function HomeClient({
         <Carousel title="Más recientes" items={recientes} />
         <Carousel title="Mejor calificadas" items={topRated} />
         <Carousel title="Próximos estrenos" items={proximos} />
-        <Carousel title="Recomendadas" items={recomendadas} />
+        <Carousel title="Infantiles de fantasía" items={kids} />
       </main>
     </>
   );

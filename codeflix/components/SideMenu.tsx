@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, Dispatch, SetStateAction, useMemo } from "react";
+import { useState, Dispatch, SetStateAction, useMemo, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,6 +77,12 @@ export default function SideMenu({ open, onClose, onApplyResults }: SideMenuProp
   // Estado de red/errores
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // controlar renderizado client-only para Radix Select
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /**
    * Activa/desactiva una opción dentro de una lista de strings.
@@ -357,7 +363,8 @@ export default function SideMenu({ open, onClose, onApplyResults }: SideMenuProp
             </div>
           )}
 
-          {/* Select para agregar un idioma */}
+          {/* Select para agregar un idioma: renderiza solo después de montar */}
+        {mounted ? (
           <Select onValueChange={addLanguage}>
             <SelectTrigger className="w-full bg-white/90 border border-[#bdebed] text-[#004b4b]">
               <SelectValue placeholder="Agregar idioma…" />
@@ -370,7 +377,14 @@ export default function SideMenu({ open, onClose, onApplyResults }: SideMenuProp
               ))}
             </SelectContent>
           </Select>
-        </div>
+        ) : (
+          // Placeholder estático durante SSR para evitar mismatch
+          <div
+            className="h-10 w-full rounded-md bg-white/70 border border-[#bdebed]"
+            aria-hidden="true"
+          />
+        )}
+      </div>
 
         {/* Estado y acciones */}
         {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
