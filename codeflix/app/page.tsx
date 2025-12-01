@@ -90,7 +90,7 @@ export default async function Home() {
       />
 
       {/* Secciones */}
-      <main className="px-6 max-w-7xl mx-auto">
+      <main className="px-6 max-w-7xl mx-auto h-full pb-[10vh] lg:pb-[5vh]">
         {/* MOSTRAR RECOMENDACIONES PERSONALIZADAS SOLO SI HAY SESIÓN */}
         {user && (
           <div className="mb-8">
@@ -109,7 +109,7 @@ export default async function Home() {
           </div>
         )}
 
-        {/* Carruseles normales (siempre visibles) */}
+        {/*Carruseles*/}
         <Carousel title="Más populares" items={populares} />
         <Carousel title="Más recientes" items={recientes} />
         <Carousel title="Mejor calificadas" items={topRated} />

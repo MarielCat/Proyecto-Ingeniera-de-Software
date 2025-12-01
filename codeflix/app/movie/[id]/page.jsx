@@ -49,7 +49,7 @@ export default async function MoviePage({ params }) {
   return (
     
     <div // Imagen de película de fondo
-      className="w-screen min-h-screen bg-cover bg-center bg-fixed relative"
+      className="w-screen min-h-full bg-cover bg-center bg-fixed relative"
       style={{
         backgroundImage: backgroundStyle,
         marginLeft: 'calc(-50vw + 50%)',
@@ -59,7 +59,7 @@ export default async function MoviePage({ params }) {
       <div className="absolute inset-0 bg-black/70"></div>
       
       {/* Contenido principal */}
-      <div className="relative z-10 px-6 py-10 max-w-3xl mx-auto mt-4">
+      <div className="relative z-10 px-6 pb-10 max-w-3xl mx-auto pt-[20vh] lg:pt-4">
         {/*Título y descripción */}
         <h1 className={`${cinzel.className} text-4xl font-bold text-[#3bccd4]`}>{movie.title}</h1>
         <p className="mt-4 text-[#b2ecef]">{movie.overview}</p>

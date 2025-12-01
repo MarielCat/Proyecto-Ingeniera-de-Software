@@ -1,4 +1,5 @@
 // codeflix/lib/tmdb-client.ts
+
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_KEY || process.env.TMDB_KEY; 
 const base = "https://api.themoviedb.org/3";
 

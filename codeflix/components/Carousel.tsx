@@ -1,4 +1,5 @@
 // codeflix/components/Carousel.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import MovieCard from "@/components/MovieCard";
@@ -163,11 +164,11 @@ export default function Carousel({
   };
 
   return (
-    <section className="mt-4">
+    <section className="mt-[5vh]">
       <h2 className={`${lora.className} text-2xl font-bold text-[#3bccd4] mb-4`}>{title}</h2>
       <div
         ref={ref}
-        className="relative overflow-x-auto whitespace-nowrap scrollbar-hide h-[25vw] cursor-grab active:cursor-grabbing"
+        className="relative overflow-x-auto whitespace-nowrap scrollbar-hide h-full lg:h-[25vw] cursor-grab active:cursor-grabbing"
         // Actualizamos el Ref 
         onMouseEnter={() => { isHoverRef.current = true; }}
         onMouseLeave={() => { isHoverRef.current = false; }}
