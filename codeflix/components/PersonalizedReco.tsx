@@ -3,12 +3,31 @@
 import React from "react";
 import Carousel from "@/components/Carousel";
 
+/**
+ * Componente `PersonalizedReco`
+ * - Obtiene y muestra recomendaciones personalizadas del endpoint interno `/api/reco`.
+ * - Renderiza un carrusel con las ítems recomendadas cuando la carga es exitosa.
+ * - Muestra estados de carga, error y vacío con mensajes claros.
+*/
 export default function PersonalizedReco() {
+  /**
+   * Estado local:
+   * - items: lista de recomendaciones.
+   * - loading: indicador de carga mientras se consulta la API.
+   * - error: mensaje de error (si algo falla).
+   * - refreshKey: clave que al cambiar fuerza la recarga del efecto de recomendaciones.
+   */
   const [items, setItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [refreshKey, setRefreshKey] = React.useState(0);
 
+  /**
+   * Efecto de carga de recomendaciones:
+   * - Llama a `/api/reco`.
+   * - Controla estados de carga y error.
+   * - Usa `mounted` para evitar `setState` cuando el componente ya no está montado.
+   */
   React.useEffect(() => {
     let mounted = true;
 
@@ -42,6 +61,11 @@ export default function PersonalizedReco() {
     };
   }, [refreshKey]);
 
+  /**
+   * Efecto para escuchar actualizaciones externas:
+   * - Escucha el evento `recoUpdated` en `window` y aumenta `refreshKey` para recargar la data.
+   * - Ejemplo de disparo: `window.dispatchEvent(new Event("recoUpdated"))`
+   */
   React.useEffect(() => {
     const handleUpdate = () => {
       console.log("[Reco] Actualizando recomendaciones...");
@@ -55,6 +79,7 @@ export default function PersonalizedReco() {
     };
   }, []);
 
+  // Estado de carga
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -66,6 +91,7 @@ export default function PersonalizedReco() {
     );
   }
 
+  // Estado de error
   if (error) {
     return (
       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
@@ -74,6 +100,7 @@ export default function PersonalizedReco() {
     );
   }
 
+  // Estado vacío (sin recomendaciones)
   if (items.length === 0) {
     return (
       <div className="bg-[#00b8c4]/10 border border-[#00b8c4]/30 rounded-lg p-6 text-center">
@@ -84,8 +111,12 @@ export default function PersonalizedReco() {
     );
   }
 
+  /**
+   * Render principal:
+   * - Carrusel horizontal con las recomendaciones. Sin título, velocidad 1.5 para dinamismo.
+   */
   return (
-    <section className="mt-4">
+    <section className="mt-4 mb-0 pb-0">
       <Carousel title="" items={items} speed={1.5} />
     </section>
   );

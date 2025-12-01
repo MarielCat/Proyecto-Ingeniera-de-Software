@@ -1,3 +1,4 @@
+//codeflix/lib/tmdb.ts
 const API_KEY = process.env.TMDB_KEY;
 const base = "https://api.themoviedb.org/3";
 
@@ -17,6 +18,21 @@ type TMDBListResponse = {
   results: TMDBMovie[];
 };
 
+type TMDBReleaseDates = {
+  results: Array<{
+    iso_3166_1: string;
+    release_dates: Array<{
+      certification: string;
+      note?: string;
+      release_date: string;
+      type: number;
+    }>;
+  }>;
+};
+
+type TMDBKeywordsResponse = {
+  keywords: Array<{ id: number; name: string }>;
+};
 export async function getFantasyMovies() {
   const res = await fetch(
     `${base}/discover/movie?api_key=${API_KEY}&with_genres=14&language=es-MX&sort_by=popularity.desc`
@@ -145,4 +161,22 @@ export async function getMovieCredits(id: number) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     director: (data.crew || []).find((person: any) => person.job === 'Director') || null,
   };
+}
+
+/**
+ * Certificaciones de una película por país (p.ej. MX, US, ES).
+ */
+export async function getMovieReleaseDates(id: number) {
+  const res = await fetch(`${base}/movie/${id}/release_dates?api_key=${API_KEY}`);
+  const data: TMDBReleaseDates = await res.json();
+  return data?.results || [];
+}
+
+/**
+ * Palabras clave de la película.
+ */
+export async function getMovieKeywords(id: number) {
+  const res = await fetch(`${base}/movie/${id}/keywords?api_key=${API_KEY}`);
+  const data: TMDBKeywordsResponse = await res.json();
+  return data?.keywords || [];
 }
