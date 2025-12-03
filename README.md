@@ -1,4 +1,4 @@
-# CodeFlix: Catálogo de películas de fantasía
+# Documentación de CodeFlix: Catálogo de películas de fantasía
 
 CodeFlix es un sistema web para explorar un catálogo de películas del género fantasía. Incluye página principal responsive, catálogo por tarjetas, detalle de película, búsqueda/filtrado y lógica de inicio de sesión. En el equipo turquesa trabajamos con metodología ágil Kanban.
 
@@ -51,12 +51,7 @@ Equipo:
 
 ## Ejecución
 
-Desarrollo:
 - npm run dev
-
-Producción:
-- npm run build
-- npm run start
 
 ## Base de Datos (Docker Compose)
 
@@ -92,18 +87,23 @@ Conexión desde la app:
 - npm run start: ejecución en producción
 - npm run lint: análisis de código con ESLint
 
-## Estructura (resumen)
+## Estructura 
 - codeflix/
   - docker-compose.yml
   - prisma/ (schema y migraciones)
   - app/ (api, páginas, lógica)
   - public/
+  - **test/** (información de las pruebas en nuestro sistema)
   - components/
   - package.json
   - .env (local)
+- README.md
+- Reporte.pdf (Justificación de arquitectura, etc)
+- **WireFrame.png** (boceto inicial de la pagina)
 
 ## Calidad y flujo de trabajo
 - Kanban para gestión de tareas
+  - Control del flujo de trabajo con **Trello**: [text](https://trello.com/b/oCs6ueF2/proyecto-ing-software)
 - Commits claros y frecuentes
 - Ramas por feature: `feature/<nombre de nuestras feats>`
 
