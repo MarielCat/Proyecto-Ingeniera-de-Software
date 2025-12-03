@@ -7,6 +7,7 @@ Equipo:
 - Carlos Adrián Celaya Nava
 - Eduardo Martínez Mejía
 - Sahara Mariel Monroy Romero
+- Edson Rafael Flores Arriola
 
 ## Requisitos
 - Node.js 20+ y npm
